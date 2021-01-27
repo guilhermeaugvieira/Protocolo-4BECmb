@@ -4,17 +4,25 @@ export interface IUsuarioAdicionarIn {
   senha: string;
 }
 
-export interface IUsuarioAdicionarOut {
+export interface IUsuarioOut {
   nome: string;
   login: string;
   senha: string;
   id: number;
 }
 
+export interface IUsuarioAtualizarIn {
+  nome: string;
+  senha: string;
+  id: string;
+}
+
 export interface IUsuarioRepository {
-  adicionar(
-    usuarioRecebido: IUsuarioAdicionarIn
-  ): Promise<IUsuarioAdicionarOut>;
+  adicionar(usuarioRecebido: IUsuarioAdicionarIn): Promise<IUsuarioOut>;
 
   remover(usuarioId: string): Promise<boolean>;
+
+  ler(): Promise<IUsuarioOut[]>;
+
+  atualizar(usuarioRecebido: IUsuarioAtualizarIn): Promise<boolean>;
 }

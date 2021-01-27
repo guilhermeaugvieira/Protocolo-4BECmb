@@ -1,20 +1,18 @@
 import { container, inject, injectable } from "tsyringe";
 import { UsuarioRepository } from "../../database/repositories/implementation/UsuarioRepository";
 import {
-  IUsuarioRepository,
+  IUsuarioAtualizarIn,
   IUsuarioOut,
-  IUsuarioAdicionarIn,
+  IUsuarioRepository,
 } from "../../database/repositories/interfaces/IUsuarioRepository";
 
 @injectable()
-export class UsuarioAdicionarUseCase {
+export class UsuarioAtualizarUseCase {
   constructor(@inject("UsuarioRepository") private _repo: IUsuarioRepository) {}
 
-  execute = async (
-    usuarioRecebido: IUsuarioAdicionarIn
-  ): Promise<IUsuarioOut> => {
+  execute = async (usuario: IUsuarioAtualizarIn): Promise<boolean> => {
     const _UsuarioRepository = container.resolve(UsuarioRepository);
 
-    return await _UsuarioRepository.adicionar(usuarioRecebido);
+    return await _UsuarioRepository.atualizar(usuario);
   };
 }

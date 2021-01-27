@@ -1,21 +1,27 @@
 import {
   IUsuarioRepository,
-  IUsuarioAdicionarOut,
+  IUsuarioOut,
   IUsuarioAdicionarIn,
+  IUsuarioAtualizarIn,
 } from "../interfaces/IUsuarioRepository";
 
-import { conexaoDB } from "../../config/mysql.config";
-import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { config } from "../../config/mysql.config";
+
+import mysql2, { ResultSetHeader, RowDataPacket } from "mysql2";
 
 export class UsuarioRepository implements IUsuarioRepository {
-  constructor() {}
+  conexaoDB;
+
+  constructor() {
+    this.conexaoDB = mysql2.createPool(config).promise();
+  }
 
   adicionar = async (
     usuarioRecebido: IUsuarioAdicionarIn
-  ): Promise<IUsuarioAdicionarOut> => {
-    let usuarioAdicionado: IUsuarioAdicionarOut;
+  ): Promise<IUsuarioOut> => {
+    let usuarioAdicionado: IUsuarioOut;
 
-    await conexaoDB
+    await this.conexaoDB
       .query(
         "INSERT INTO usuario(UsuarioNome, UsuarioLogin, UsuarioSenha) values (?, ?, ?)",
         [usuarioRecebido.nome, usuarioRecebido.login, usuarioRecebido.senha]
@@ -31,11 +37,10 @@ export class UsuarioRepository implements IUsuarioRepository {
         };
       })
       .catch((erro) => {
-        console.log(erro);
         usuarioAdicionado = null;
       })
       .finally(() => {
-        conexaoDB.end();
+        this.conexaoDB.end();
       });
 
     return usuarioAdicionado;
@@ -44,7 +49,7 @@ export class UsuarioRepository implements IUsuarioRepository {
   remover = async (usuarioId: string): Promise<boolean> => {
     let usuarioRemovido: boolean;
 
-    await conexaoDB
+    await this.conexaoDB
       .query("DELETE FROM usuario WHERE UsuarioID = ?", [usuarioId])
       .then((resultado) => {
         const { affectedRows } = <ResultSetHeader>resultado[0];
@@ -56,9 +61,53 @@ export class UsuarioRepository implements IUsuarioRepository {
         return (usuarioRemovido = false);
       })
       .finally(() => {
-        conexaoDB.end();
+        this.conexaoDB.end();
       });
 
     return usuarioRemovido;
+  };
+
+  ler = async (): Promise<IUsuarioOut[]> => {
+    let usuarios: IUsuarioOut[] = [];
+    let dadosQuery: IUsuarioOut;
+
+    await this.conexaoDB.query("SELECT * FROM usuario").then((resultado) => {
+      const respostaQuery = <RowDataPacket>resultado[0];
+
+      for (let i = 0; i < respostaQuery.length; i++) {
+        dadosQuery = {
+          id: respostaQuery[i].UsuarioID,
+          login: respostaQuery[i].UsuarioLogin,
+          nome: respostaQuery[i].UsuarioNome,
+          senha: respostaQuery[i].UsuarioSenha,
+        };
+
+        usuarios.push(dadosQuery);
+      }
+    });
+
+    return usuarios;
+  };
+
+  atualizar = async (
+    usuarioRecebido: IUsuarioAtualizarIn
+  ): Promise<boolean> => {
+    let usuarioAtualizado = false;
+
+    await this.conexaoDB
+      .query(
+        "UPDATE usuario SET UsuarioNome = ?, UsuarioSenha = ? where UsuarioID = ?",
+        [usuarioRecebido.nome, usuarioRecebido.senha, usuarioRecebido.id]
+      )
+      .then((resultado) => {
+        const { affectedRows } = <ResultSetHeader>resultado[0];
+
+        if (affectedRows >= 1) usuarioAtualizado = true;
+        else usuarioAtualizado = false;
+      })
+      .catch(() => {
+        usuarioAtualizado = false;
+      });
+    return usuarioAtualizado;
   };
 }

@@ -3,18 +3,15 @@ import { UsuarioRepository } from "../../database/repositories/implementation/Us
 import {
   IUsuarioRepository,
   IUsuarioOut,
-  IUsuarioAdicionarIn,
 } from "../../database/repositories/interfaces/IUsuarioRepository";
 
 @injectable()
-export class UsuarioAdicionarUseCase {
+export class UsuarioLerUseCase {
   constructor(@inject("UsuarioRepository") private _repo: IUsuarioRepository) {}
 
-  execute = async (
-    usuarioRecebido: IUsuarioAdicionarIn
-  ): Promise<IUsuarioOut> => {
+  execute = async (): Promise<IUsuarioOut[]> => {
     const _UsuarioRepository = container.resolve(UsuarioRepository);
 
-    return await _UsuarioRepository.adicionar(usuarioRecebido);
+    return await _UsuarioRepository.ler();
   };
 }
