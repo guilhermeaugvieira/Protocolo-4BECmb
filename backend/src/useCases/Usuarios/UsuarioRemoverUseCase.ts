@@ -7,8 +7,6 @@ export class UsuarioRemoverUseCase {
   constructor(@inject("UsuarioRepository") private _repo: IUsuarioRepository) {}
 
   execute = async (usuarioId: string): Promise<boolean> => {
-    const _UsuarioRepository = container.resolve(UsuarioRepository);
-
-    return await _UsuarioRepository.remover(usuarioId);
+    return await this._repo.remover(usuarioId);
   };
 }

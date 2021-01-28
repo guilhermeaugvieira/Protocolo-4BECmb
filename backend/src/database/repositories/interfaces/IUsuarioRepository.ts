@@ -17,6 +17,11 @@ export interface IUsuarioAtualizarIn {
   id: string;
 }
 
+export interface IUsuarioAcessoIn {
+  login: string;
+  senha: string;
+}
+
 export interface IUsuarioRepository {
   adicionar(usuarioRecebido: IUsuarioAdicionarIn): Promise<IUsuarioOut>;
 
@@ -25,4 +30,8 @@ export interface IUsuarioRepository {
   ler(): Promise<IUsuarioOut[]>;
 
   atualizar(usuarioRecebido: IUsuarioAtualizarIn): Promise<boolean>;
+
+  lerPorId(usuarioId: string): Promise<IUsuarioOut>;
+
+  verificarAcesso(usuarioRecebido: IUsuarioAcessoIn): Promise<IUsuarioOut>;
 }

@@ -3,6 +3,7 @@ import {
   IUsuarioOut,
   IUsuarioAdicionarIn,
   IUsuarioAtualizarIn,
+  IUsuarioAcessoIn,
 } from "../interfaces/IUsuarioRepository";
 
 import { config } from "../../config/mysql.config";
@@ -68,7 +69,7 @@ export class UsuarioRepository implements IUsuarioRepository {
   };
 
   ler = async (): Promise<IUsuarioOut[]> => {
-    let usuarios: IUsuarioOut[] = [];
+    let usuariosRegistrados: IUsuarioOut[] = [];
     let dadosQuery: IUsuarioOut;
 
     await this.conexaoDB.query("SELECT * FROM usuario").then((resultado) => {
@@ -82,11 +83,11 @@ export class UsuarioRepository implements IUsuarioRepository {
           senha: respostaQuery[i].UsuarioSenha,
         };
 
-        usuarios.push(dadosQuery);
+        usuariosRegistrados.push(dadosQuery);
       }
     });
 
-    return usuarios;
+    return usuariosRegistrados;
   };
 
   atualizar = async (
@@ -109,5 +110,52 @@ export class UsuarioRepository implements IUsuarioRepository {
         usuarioAtualizado = false;
       });
     return usuarioAtualizado;
+  };
+
+  lerPorId = async (usuarioId: string): Promise<IUsuarioOut> => {
+    let usuarioEncontrado: IUsuarioOut = null;
+
+    await this.conexaoDB
+      .query("SELECT * FROM usuario WHERE UsuarioID = ?", [usuarioId])
+      .then((resultado) => {
+        const respostaQuery = <RowDataPacket>resultado[0];
+
+        if (respostaQuery.length === 1) {
+          usuarioEncontrado = {
+            id: respostaQuery[0].UsuarioID,
+            login: respostaQuery[0].UsuarioLogin,
+            nome: respostaQuery[0].UsuarioNome,
+            senha: respostaQuery[0].UsuarioSenha,
+          };
+        }
+      });
+
+    return usuarioEncontrado;
+  };
+
+  verificarAcesso = async (
+    usuarioRecebido: IUsuarioAcessoIn
+  ): Promise<IUsuarioOut> => {
+    let dadosUsuario: IUsuarioOut = null;
+
+    await this.conexaoDB
+      .query(
+        "SELECT * FROM usuario WHERE UsuarioLogin = ? and UsuarioSenha = ?",
+        [usuarioRecebido.login, usuarioRecebido.senha]
+      )
+      .then((resultado) => {
+        const respostaQuery = <RowDataPacket>resultado[0];
+
+        if (respostaQuery.length === 1) {
+          dadosUsuario = {
+            id: respostaQuery[0].UsuarioID,
+            login: respostaQuery[0].UsuarioLogin,
+            nome: respostaQuery[0].UsuarioNome,
+            senha: respostaQuery[0].UsuarioSenha,
+          };
+        }
+      });
+
+    return dadosUsuario;
   };
 }

@@ -11,8 +11,6 @@ export class UsuarioAtualizarUseCase {
   constructor(@inject("UsuarioRepository") private _repo: IUsuarioRepository) {}
 
   execute = async (usuario: IUsuarioAtualizarIn): Promise<boolean> => {
-    const _UsuarioRepository = container.resolve(UsuarioRepository);
-
-    return await _UsuarioRepository.atualizar(usuario);
+    return await this._repo.atualizar(usuario);
   };
 }

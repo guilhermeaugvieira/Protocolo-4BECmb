@@ -10,8 +10,6 @@ export class UsuarioLerUseCase {
   constructor(@inject("UsuarioRepository") private _repo: IUsuarioRepository) {}
 
   execute = async (): Promise<IUsuarioOut[]> => {
-    const _UsuarioRepository = container.resolve(UsuarioRepository);
-
-    return await _UsuarioRepository.ler();
+    return await this._repo.ler();
   };
 }
