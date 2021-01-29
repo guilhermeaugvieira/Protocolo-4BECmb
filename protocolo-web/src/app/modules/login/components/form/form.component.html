@@ -1,19 +1,19 @@
 <div class="formContainer">
   <mat-card class="formContainer_card">
     <mat-card-content class="formContainer_card_conteudo">
-      <form [formGroup]="formGrp" class="formLogin">
+      <form [formGroup]="formGrp" class="formLogin" (ngSubmit)="login()">
         <app-input
           [label]="'Login'"
           [requires]="true"
           [tipo]="'text'"
-          [ctrl]="'userName'"
+          [ctrl]="formGrp.controls.userName"
         ></app-input>
 
         <app-input
           [label]="'Senha'"
           [requires]="true"
           [tipo]="'password'"
-          [ctrl]="'password'"
+          [ctrl]="formGrp.controls.password"
         ></app-input>
 
         <button

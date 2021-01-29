@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { UserService } from 'src/app/services/UserService/user.service';
 
 @Component({
@@ -12,10 +17,13 @@ export class FormComponent implements OnInit {
   userName: FormControl;
   password: FormControl;
 
-  constructor(private _userService: UserService) {}
+  constructor(
+    private _userService: UserService,
+    private _formBuiler: FormBuilder
+  ) {}
 
   ngOnInit(): void {
-    this.formGrp = new FormGroup({
+    this.formGrp = this._formBuiler.group({
       userName: new FormControl(this.userName, [Validators.required]),
       password: new FormControl(this.password, [Validators.required]),
     });

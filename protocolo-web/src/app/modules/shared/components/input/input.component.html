@@ -4,6 +4,6 @@
     matInput
     type="{{ tipo }}"
     [required]="requires"
-    [formControlName]="ctrl"
+    [formControl]="$any(ctrl)"
   />
 </mat-form-field>

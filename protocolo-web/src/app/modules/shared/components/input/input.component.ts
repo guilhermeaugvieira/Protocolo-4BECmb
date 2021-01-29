@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-input',
@@ -8,7 +8,7 @@ import { FormGroup } from '@angular/forms';
 })
 export class InputComponent implements OnInit {
   @Input()
-  ctrl: string;
+  ctrl: AbstractControl;
 
   @Input()
   label: string;
