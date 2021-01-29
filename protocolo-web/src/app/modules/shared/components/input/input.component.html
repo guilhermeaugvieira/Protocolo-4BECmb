@@ -1,0 +1,9 @@
+<mat-form-field appearance="outline" class="textInput">
+  <mat-label>{{ label }}</mat-label>
+  <input
+    matInput
+    type="{{ tipo }}"
+    [required]="requires"
+    [formControlName]="ctrl"
+  />
+</mat-form-field>

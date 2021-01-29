@@ -1,0 +1,43 @@
+@import "../../../shared/estiloDosComponentes";
+
+.formContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &_card {
+    border-radius: 15px;
+    border: 5px solid #ccc;
+
+    &_conteudo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+
+      .formLogin {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+
+        .btnInput {
+          background-color: #b3e0ff;
+          transition: all 0.2s;
+          cursor: pointer;
+
+          &:disabled {
+            background-color: #ff9999;
+            cursor: progress;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}

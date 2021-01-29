@@ -1,0 +1,30 @@
+<div class="formContainer">
+  <mat-card class="formContainer_card">
+    <mat-card-content class="formContainer_card_conteudo">
+      <form [formGroup]="formGrp" class="formLogin">
+        <app-input
+          [label]="'Login'"
+          [requires]="true"
+          [tipo]="'text'"
+          [ctrl]="'userName'"
+        ></app-input>
+
+        <app-input
+          [label]="'Senha'"
+          [requires]="true"
+          [tipo]="'password'"
+          [ctrl]="'password'"
+        ></app-input>
+
+        <button
+          type="submit"
+          mat-raised-button
+          class="btnInput"
+          [disabled]="formGrp.invalid || formGrp.pending"
+        >
+          Login
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

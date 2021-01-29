@@ -9,18 +9,23 @@ import {
 import { config } from "../../config/mysql.config";
 
 import mysql2, { ResultSetHeader, RowDataPacket } from "mysql2";
+import { Pool } from "mysql2/promise";
 
 export class UsuarioRepository implements IUsuarioRepository {
-  conexaoDB;
+  conexaoDB: Pool;
 
-  constructor() {
+  constructor() {}
+
+  abrirConexao = (): void => {
     this.conexaoDB = mysql2.createPool(config).promise();
-  }
+  };
 
   adicionar = async (
     usuarioRecebido: IUsuarioAdicionarIn
   ): Promise<IUsuarioOut> => {
     let usuarioAdicionado: IUsuarioOut;
+
+    this.abrirConexao();
 
     await this.conexaoDB
       .query(
@@ -37,9 +42,6 @@ export class UsuarioRepository implements IUsuarioRepository {
           id: insertId,
         };
       })
-      .catch((erro) => {
-        usuarioAdicionado = null;
-      })
       .finally(() => {
         this.conexaoDB.end();
       });
@@ -50,6 +52,8 @@ export class UsuarioRepository implements IUsuarioRepository {
   remover = async (usuarioId: string): Promise<boolean> => {
     let usuarioRemovido: boolean;
 
+    this.abrirConexao();
+
     await this.conexaoDB
       .query("DELETE FROM usuario WHERE UsuarioID = ?", [usuarioId])
       .then((resultado) => {
@@ -57,9 +61,6 @@ export class UsuarioRepository implements IUsuarioRepository {
 
         if (affectedRows === 1) usuarioRemovido = true;
         else usuarioRemovido = false;
-      })
-      .catch(() => {
-        return (usuarioRemovido = false);
       })
       .finally(() => {
         this.conexaoDB.end();
@@ -72,20 +73,27 @@ export class UsuarioRepository implements IUsuarioRepository {
     let usuariosRegistrados: IUsuarioOut[] = [];
     let dadosQuery: IUsuarioOut;
 
-    await this.conexaoDB.query("SELECT * FROM usuario").then((resultado) => {
-      const respostaQuery = <RowDataPacket>resultado[0];
+    this.abrirConexao();
 
-      for (let i = 0; i < respostaQuery.length; i++) {
-        dadosQuery = {
-          id: respostaQuery[i].UsuarioID,
-          login: respostaQuery[i].UsuarioLogin,
-          nome: respostaQuery[i].UsuarioNome,
-          senha: respostaQuery[i].UsuarioSenha,
-        };
+    await this.conexaoDB
+      .query("SELECT * FROM usuario")
+      .then((resultado) => {
+        const respostaQuery = <RowDataPacket>resultado[0];
 
-        usuariosRegistrados.push(dadosQuery);
-      }
-    });
+        for (let i = 0; i < respostaQuery.length; i++) {
+          dadosQuery = {
+            id: respostaQuery[i].UsuarioID,
+            login: respostaQuery[i].UsuarioLogin,
+            nome: respostaQuery[i].UsuarioNome,
+            senha: respostaQuery[i].UsuarioSenha,
+          };
+
+          usuariosRegistrados.push(dadosQuery);
+        }
+      })
+      .finally(() => {
+        this.conexaoDB.end();
+      });
 
     return usuariosRegistrados;
   };
@@ -94,6 +102,8 @@ export class UsuarioRepository implements IUsuarioRepository {
     usuarioRecebido: IUsuarioAtualizarIn
   ): Promise<boolean> => {
     let usuarioAtualizado = false;
+
+    this.abrirConexao();
 
     await this.conexaoDB
       .query(
@@ -106,14 +116,17 @@ export class UsuarioRepository implements IUsuarioRepository {
         if (affectedRows >= 1) usuarioAtualizado = true;
         else usuarioAtualizado = false;
       })
-      .catch(() => {
-        usuarioAtualizado = false;
+      .finally(() => {
+        this.conexaoDB.end();
       });
+
     return usuarioAtualizado;
   };
 
   lerPorId = async (usuarioId: string): Promise<IUsuarioOut> => {
     let usuarioEncontrado: IUsuarioOut = null;
+
+    this.abrirConexao();
 
     await this.conexaoDB
       .query("SELECT * FROM usuario WHERE UsuarioID = ?", [usuarioId])
@@ -128,6 +141,9 @@ export class UsuarioRepository implements IUsuarioRepository {
             senha: respostaQuery[0].UsuarioSenha,
           };
         }
+      })
+      .finally(() => {
+        this.conexaoDB.end();
       });
 
     return usuarioEncontrado;
@@ -137,6 +153,8 @@ export class UsuarioRepository implements IUsuarioRepository {
     usuarioRecebido: IUsuarioAcessoIn
   ): Promise<IUsuarioOut> => {
     let dadosUsuario: IUsuarioOut = null;
+
+    this.abrirConexao();
 
     await this.conexaoDB
       .query(
@@ -154,6 +172,9 @@ export class UsuarioRepository implements IUsuarioRepository {
             senha: respostaQuery[0].UsuarioSenha,
           };
         }
+      })
+      .finally(() => {
+        this.conexaoDB.end();
       });
 
     return dadosUsuario;
