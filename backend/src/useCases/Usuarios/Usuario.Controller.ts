@@ -1,16 +1,16 @@
-import { Request, response, Response } from "express";
+import { Request, Response } from "express";
 import { container } from "tsyringe";
-import { UsuarioAdicionarUseCase } from "./UsuarioAdicionarUseCase";
 import {
   IUsuarioAcessoIn,
   IUsuarioAdicionarIn,
   IUsuarioAtualizarIn,
 } from "../../database/repositories/interfaces/IUsuarioRepository";
-import { UsuarioRemoverUseCase } from "./UsuarioRemoverUseCase";
-import { UsuarioLerUseCase } from "./UsuarioLerUseCase";
-import { UsuarioAtualizarUseCase } from "./UsuarioAtualizarUseCase";
-import { UsuarioLerPorIdUseCase } from "./UsuarioLerPorIdUseCase";
-import { UsuarioVericarAcessoUseCase } from "./UsuarioVerificarAcessoUseCase";
+import { UsuarioRemoverUseCase } from "./UsuarioRemover.UseCase";
+import { UsuarioLerUseCase } from "./UsuarioLer.UseCase";
+import { UsuarioAtualizarUseCase } from "./UsuarioAtualizar.UseCase";
+import { UsuarioLerPorIdUseCase } from "./UsuarioLerPorId.UseCase";
+import { UsuarioVericarAcessoUseCase } from "./UsuarioVerificarAcesso.UseCase";
+import { UsuarioAdicionarUseCase } from "./UsuarioAdicionar.UseCase";
 
 export class UsuarioController {
   constructor() {}
@@ -19,39 +19,42 @@ export class UsuarioController {
     requisicao: Request,
     resposta: Response
   ): Promise<Response> => {
-    const _UsuarioLerUseCase = container.resolve(UsuarioLerUseCase);
+    const _UsuarioLer = container.resolve(UsuarioLerUseCase);
 
-    return resposta.json(await _UsuarioLerUseCase.execute());
+    return resposta.json(await _UsuarioLer.execute());
   };
 
-  lerPorId = async (
+  lerUsuarioPorId = async (
     requisicao: Request,
     resposta: Response
   ): Promise<Response> => {
-    const usuarioId = requisicao.params.id;
+    const usuarioId = requisicao.params.usuarioId;
 
-    if (usuarioId === "" || usuarioId === undefined)
+    if (usuarioId === undefined || usuarioId === "")
       return resposta.json("Usuário não enviado para verificação");
 
-    const _UsuarioLerPorIdUseCase = container.resolve(UsuarioLerPorIdUseCase);
+    const _UsuarioLerPorId = container.resolve(UsuarioLerPorIdUseCase);
 
-    return resposta.json(await _UsuarioLerPorIdUseCase.execute(usuarioId));
+    return resposta.json(await _UsuarioLerPorId.execute(usuarioId));
   };
 
-  removerUsuario = async (
+  remover = async (
     requisicao: Request,
     resposta: Response
   ): Promise<Response> => {
-    const usuarioId = requisicao.params.id;
+    const usuarioId = requisicao.params.usuarioId;
 
-    const _UsuarioLerPorIdUseCase = container.resolve(UsuarioLerPorIdUseCase);
+    if (usuarioId === undefined || usuarioId === "")
+      return resposta.json("Usuário não enviado para remoção");
 
-    if ((await _UsuarioLerPorIdUseCase.execute(usuarioId)) === null)
+    const _UsuarioLerPorId = container.resolve(UsuarioLerPorIdUseCase);
+
+    if ((await _UsuarioLerPorId.execute(usuarioId)) === null)
       return resposta.json("Usuário não registrado no sistema");
 
-    const _UsuarioRemoverUseCase = container.resolve(UsuarioRemoverUseCase);
+    const _UsuarioRemover = container.resolve(UsuarioRemoverUseCase);
 
-    return resposta.json(await _UsuarioRemoverUseCase.execute(usuarioId));
+    return resposta.json(await _UsuarioRemover.execute(usuarioId));
   };
 
   adicionarUsuario = async (
@@ -60,13 +63,13 @@ export class UsuarioController {
   ): Promise<Response> => {
     const { nome, usuario, senha } = requisicao.body;
 
-    if (nome.length < 1 || nome.length > 20 || nome == null)
+    if (nome.length < 1 || nome.length > 20 || nome === undefined)
       return resposta.json("Nome não foi enviada corretamente");
 
-    if (usuario.length < 1 || usuario.length > 20 || usuario == null)
+    if (usuario.length < 1 || usuario.length > 20 || usuario === undefined)
       return resposta.json("Usuário não foi enviada corretamente");
 
-    if (senha.length < 1 || senha.length > 20 || senha == null)
+    if (senha.length < 1 || senha.length > 20 || senha === undefined)
       return resposta.json("Senha não foi enviada corretamente");
 
     const dadosUsuario: IUsuarioAdicionarIn = {
@@ -85,28 +88,31 @@ export class UsuarioController {
     resposta: Response
   ): Promise<Response> => {
     const { nome, senha } = requisicao.body;
-    const id = requisicao.params.id;
+    const usuarioId = requisicao.params.usuarioId;
 
-    const _UsuarioLerPorIdUseCase = container.resolve(UsuarioLerPorIdUseCase);
+    const _UsuarioLerPorId = container.resolve(UsuarioLerPorIdUseCase);
 
-    if ((await _UsuarioLerPorIdUseCase.execute(id)) === null)
+    if (usuarioId === undefined || usuarioId === "")
+      return resposta.json("Usuário não foi enviado corretamente");
+
+    if ((await _UsuarioLerPorId.execute(usuarioId)) === null)
       return resposta.json("Usuário não registrado no sistema");
 
-    if (nome.length < 1 || nome.length > 20 || nome == null)
+    if (nome.length < 1 || nome.length > 20 || nome === undefined)
       return resposta.json("Nome não foi enviado corretamente");
 
-    if (senha.length < 1 || senha.length > 20 || senha == null)
+    if (senha.length < 1 || senha.length > 20 || senha === undefined)
       return resposta.json("Senha não foi enviado corretamente");
 
     const dadosUsuario: IUsuarioAtualizarIn = {
-      id: id,
+      id: usuarioId,
       nome: nome,
       senha: senha,
     };
 
-    const _UsuarioAtualizarUseCase = container.resolve(UsuarioAtualizarUseCase);
+    const _UsuarioAtualizar = container.resolve(UsuarioAtualizarUseCase);
 
-    return resposta.json(await _UsuarioAtualizarUseCase.execute(dadosUsuario));
+    return resposta.json(await _UsuarioAtualizar.execute(dadosUsuario));
   };
 
   verificarAcesso = async (
@@ -115,10 +121,10 @@ export class UsuarioController {
   ): Promise<Response> => {
     const { login, senha } = requisicao.body;
 
-    if (login === "" || login === null)
+    if (login === "" || login === undefined)
       return resposta.json("Usuário não foi enviado corretamente");
 
-    if (senha === "" || login === null)
+    if (senha === "" || login === undefined)
       return resposta.json("Senha não foi enviada corretamente");
 
     const usuario: IUsuarioAcessoIn = {
@@ -126,10 +132,10 @@ export class UsuarioController {
       senha: senha,
     };
 
-    const _UsuarioVerificarAcessoUseCase = container.resolve(
+    const _UsuarioVerificarAcesso = container.resolve(
       UsuarioVericarAcessoUseCase
     );
 
-    return resposta.json(await _UsuarioVerificarAcessoUseCase.execute(usuario));
+    return resposta.json(await _UsuarioVerificarAcesso.execute(usuario));
   };
 }

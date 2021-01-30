@@ -8,7 +8,7 @@ import { config } from "../../config/mysql.config";
 import mysql2 from "mysql2";
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
-export class DocExternoRepository implements IDocRepository {
+export class DocInternoRepository implements IDocRepository {
   conexaoDB: Pool;
 
   constructor() {}
@@ -24,7 +24,7 @@ export class DocExternoRepository implements IDocRepository {
     this.abrirConexao();
 
     await this.conexaoDB
-      .query("SELECT * FROM doc_externo")
+      .query("SELECT * FROM doc_interno")
       .then((resultado) => {
         const respostaQuery = <RowDataPacket>resultado[0];
 
@@ -33,16 +33,16 @@ export class DocExternoRepository implements IDocRepository {
 
           for (let i = 0; i < respostaQuery.length; i++) {
             dadosQuery = {
-              id: respostaQuery[i].ExternoID,
-              assunto: respostaQuery[i].ExternoAssunto,
-              dataDocumento: respostaQuery[i].ExternoDataDocumento,
-              dataRecebimento: respostaQuery[i].ExternoDatarecebimento,
-              especificacao: respostaQuery[i].Externoespecificacao,
-              nrProtocolo: respostaQuery[i].ExternoNrprotocolo,
-              procedencia: respostaQuery[i].ExternoProcedencia,
-              destino1: respostaQuery[i].ExternoDestino1,
-              destino2: respostaQuery[i].ExternoDestino2,
-              destino3: respostaQuery[i].ExternoDestino3,
+              id: respostaQuery[i].InternoID,
+              assunto: respostaQuery[i].InternoAssunto,
+              dataDocumento: respostaQuery[i].InternoDataDocumento,
+              dataRecebimento: respostaQuery[i].InternoDatarecebimento,
+              especificacao: respostaQuery[i].Internoespecificacao,
+              nrProtocolo: respostaQuery[i].InternoNrprotocolo,
+              procedencia: respostaQuery[i].InternoProcedencia,
+              destino1: respostaQuery[i].InternoDestino1,
+              destino2: respostaQuery[i].InternoDestino2,
+              destino3: respostaQuery[i].InternoDestino3,
             };
 
             documentosRegistrados.push(dadosQuery);
@@ -62,22 +62,22 @@ export class DocExternoRepository implements IDocRepository {
     this.abrirConexao();
 
     await this.conexaoDB
-      .query("SELECT * FROM doc_externo WHERE ExternoID = ?", [documentoId])
+      .query("SELECT * FROM doc_interno WHERE InternoID = ?", [documentoId])
       .then((resultado) => {
         const respostaQuery = <RowDataPacket>resultado[0];
 
         if (respostaQuery.length === 1) {
           documentoEncontrado = {
-            id: respostaQuery[0].ExternoID,
-            assunto: respostaQuery[0].ExternoAssunto,
-            dataDocumento: respostaQuery[0].ExternoDataDocumento,
-            dataRecebimento: respostaQuery[0].ExternoDatarecebimento,
-            especificacao: respostaQuery[0].Externoespecificacao,
-            nrProtocolo: respostaQuery[0].ExternoNrprotocolo,
-            procedencia: respostaQuery[0].ExternoProcedencia,
-            destino1: respostaQuery[0].ExternoDestino1,
-            destino2: respostaQuery[0].ExternoDestino2,
-            destino3: respostaQuery[0].ExternoDestino3,
+            id: respostaQuery[0].InternoID,
+            assunto: respostaQuery[0].InternoAssunto,
+            dataDocumento: respostaQuery[0].InternoDataDocumento,
+            dataRecebimento: respostaQuery[0].InternoDatarecebimento,
+            especificacao: respostaQuery[0].Internoespecificacao,
+            nrProtocolo: respostaQuery[0].InternoNrprotocolo,
+            procedencia: respostaQuery[0].InternoProcedencia,
+            destino1: respostaQuery[0].InternoDestino1,
+            destino2: respostaQuery[0].InternoDestino2,
+            destino3: respostaQuery[0].InternoDestino3,
           };
         }
       })
@@ -95,16 +95,16 @@ export class DocExternoRepository implements IDocRepository {
 
     await this.conexaoDB
       .query(
-        "INSERT INTO doc_externo( \
-      Externoespecificacao, \
-      ExternoDataDocumento, \
-      ExternoProcedencia, \
-      ExternoDatarecebimento, \
-      ExternoNrprotocolo, \
-      ExternoAssunto, \
-      ExternoDestino1, \
-      ExternoDestino2, \
-      ExternoDestino3) \
+        "INSERT INTO doc_interno( \
+      Internoespecificacao, \
+      InternoDataDocumento, \
+      InternoProcedencia, \
+      InternoDatarecebimento, \
+      InternoNrprotocolo, \
+      InternoAssunto, \
+      InternoDestino1, \
+      InternoDestino2, \
+      InternoDestino3) \
       values (?,?,?,?,?,?,?,?,?)",
         [
           documentoRecebido.especificacao,
@@ -147,7 +147,7 @@ export class DocExternoRepository implements IDocRepository {
     this.abrirConexao();
 
     await this.conexaoDB
-      .query("DELETE FROM doc_externo WHERE ExternoID = ?", [documentoId])
+      .query("DELETE FROM doc_interno WHERE InternoID = ?", [documentoId])
       .then((resultado) => {
         const { affectedRows } = <ResultSetHeader>resultado[0];
 
@@ -168,17 +168,17 @@ export class DocExternoRepository implements IDocRepository {
 
     await this.conexaoDB
       .query(
-        "UPDATE doc_externo SET \
-      Externoespecificacao = ?, \
-      ExternoDataDocumento = ?, \
-      ExternoProcedencia = ?, \
-      ExternoDatarecebimento = ?, \
-      ExternoNrprotocolo = ?, \
-      ExternoAssunto = ?, \
-      ExternoDestino1 = ?, \
-      ExternoDestino2 = ?, \
-      ExternoDestino3 = ? \
-      WHERE ExternoID = ?",
+        "UPDATE doc_interno SET \
+      Internoespecificacao = ?, \
+      InternoDataDocumento = ?, \
+      InternoProcedencia = ?, \
+      InternoDatarecebimento = ?, \
+      InternoNrprotocolo = ?, \
+      InternoAssunto = ?, \
+      InternoDestino1 = ?, \
+      InternoDestino2 = ?, \
+      InternoDestino3 = ? \
+      WHERE InternoID = ?",
         [
           documentoRecebido.especificacao,
           documentoRecebido.dataDocumento,
@@ -213,7 +213,7 @@ export class DocExternoRepository implements IDocRepository {
 
     await this.conexaoDB
       .query(
-        `SELECT * FROM doc_externo WHERE ${filtro.parametro} LIKE '%${filtro.valor}%'`
+        `SELECT * FROM doc_interno WHERE ${filtro.parametro} LIKE '%${filtro.valor}%'`
       )
       .then((resultado) => {
         const respostaQuery = <RowDataPacket>resultado[0];
@@ -223,16 +223,16 @@ export class DocExternoRepository implements IDocRepository {
 
           for (let i = 0; i < respostaQuery.length; i++) {
             dadosQuery = {
-              id: respostaQuery[i].ExternoID,
-              assunto: respostaQuery[i].ExternoAssunto,
-              dataDocumento: respostaQuery[i].ExternoDataDocumento,
-              dataRecebimento: respostaQuery[i].ExternoDatarecebimento,
-              especificacao: respostaQuery[i].Externoespecificacao,
-              nrProtocolo: respostaQuery[i].ExternoNrprotocolo,
-              procedencia: respostaQuery[i].ExternoProcedencia,
-              destino1: respostaQuery[i].ExternoDestino1,
-              destino2: respostaQuery[i].ExternoDestino2,
-              destino3: respostaQuery[i].ExternoDestino3,
+              id: respostaQuery[i].InternoID,
+              assunto: respostaQuery[i].InternoAssunto,
+              dataDocumento: respostaQuery[i].InternoDataDocumento,
+              dataRecebimento: respostaQuery[i].InternoDatarecebimento,
+              especificacao: respostaQuery[i].Internoespecificacao,
+              nrProtocolo: respostaQuery[i].InternoNrprotocolo,
+              procedencia: respostaQuery[i].InternoProcedencia,
+              destino1: respostaQuery[i].InternoDestino1,
+              destino2: respostaQuery[i].InternoDestino2,
+              destino3: respostaQuery[i].InternoDestino3,
             };
 
             documentosEncontrados.push(dadosQuery);

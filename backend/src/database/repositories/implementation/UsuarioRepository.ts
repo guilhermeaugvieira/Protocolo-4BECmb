@@ -70,7 +70,7 @@ export class UsuarioRepository implements IUsuarioRepository {
   };
 
   ler = async (): Promise<IUsuarioOut[]> => {
-    let usuariosRegistrados: IUsuarioOut[] = [];
+    let usuariosRegistrados: IUsuarioOut[] = null;
     let dadosQuery: IUsuarioOut;
 
     this.abrirConexao();
@@ -80,15 +80,19 @@ export class UsuarioRepository implements IUsuarioRepository {
       .then((resultado) => {
         const respostaQuery = <RowDataPacket>resultado[0];
 
-        for (let i = 0; i < respostaQuery.length; i++) {
-          dadosQuery = {
-            id: respostaQuery[i].UsuarioID,
-            login: respostaQuery[i].UsuarioLogin,
-            nome: respostaQuery[i].UsuarioNome,
-            senha: respostaQuery[i].UsuarioSenha,
-          };
+        if (respostaQuery.length >= 1) {
+          usuariosRegistrados = [];
 
-          usuariosRegistrados.push(dadosQuery);
+          for (let i = 0; i < respostaQuery.length; i++) {
+            dadosQuery = {
+              id: respostaQuery[i].UsuarioID,
+              login: respostaQuery[i].UsuarioLogin,
+              nome: respostaQuery[i].UsuarioNome,
+              senha: respostaQuery[i].UsuarioSenha,
+            };
+
+            usuariosRegistrados.push(dadosQuery);
+          }
         }
       })
       .finally(() => {
@@ -113,7 +117,7 @@ export class UsuarioRepository implements IUsuarioRepository {
       .then((resultado) => {
         const { affectedRows } = <ResultSetHeader>resultado[0];
 
-        if (affectedRows >= 1) usuarioAtualizado = true;
+        if (affectedRows === 1) usuarioAtualizado = true;
         else usuarioAtualizado = false;
       })
       .finally(() => {
