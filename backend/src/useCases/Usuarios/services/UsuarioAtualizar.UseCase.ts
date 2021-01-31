@@ -1,10 +1,8 @@
 import { container, inject, injectable } from "tsyringe";
-import { UsuarioRepository } from "../../database/repositories/implementation/UsuarioRepository";
 import {
   IUsuarioAtualizarIn,
-  IUsuarioOut,
   IUsuarioRepository,
-} from "../../database/repositories/interfaces/IUsuarioRepository";
+} from "../../../database/repositories/interfaces/IUsuarioRepository";
 
 @injectable()
 export class UsuarioAtualizarUseCase {

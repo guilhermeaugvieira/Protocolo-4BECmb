@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { IDocRepository } from "../../database/repositories/interfaces/IDocRepository";
+import { IDocRepository } from "../../../database/repositories/interfaces/IDocRepository";
 
 @injectable()
 export class DocInternoRemoverUseCase {

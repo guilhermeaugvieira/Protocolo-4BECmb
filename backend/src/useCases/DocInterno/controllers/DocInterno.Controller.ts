@@ -4,13 +4,13 @@ import {
   IDocFiltro,
   IDocIn,
   IDocOut,
-} from "../../database/repositories/interfaces/IDocRepository";
-import { DocInternoAdicionarUseCase } from "./DocInternoAdicionar.UseCase";
-import { DocInternoAtualizarUseCase } from "./DocInternoAtualizar.UseCase";
-import { DocInternoLerUseCase } from "./DocInternoLer.UseCase";
-import { DocInternoLerPorIdUseCase } from "./DocInternoLerPorId.UseCase";
-import { DocInternoProcurarUseCase } from "./DocInternoProcurar.UseCase";
-import { DocInternoRemoverUseCase } from "./DocInternoRemover.UseCase";
+} from "../../../database/repositories/interfaces/IDocRepository";
+import { DocInternoAdicionarUseCase } from "../services/DocInternoAdicionar.UseCase";
+import { DocInternoAtualizarUseCase } from "../services/DocInternoAtualizar.UseCase";
+import { DocInternoLerUseCase } from "../services/DocInternoLer.UseCase";
+import { DocInternoLerPorIdUseCase } from "../services/DocInternoLerPorId.UseCase";
+import { DocInternoProcurarUseCase } from "../services/DocInternoProcurar.UseCase";
+import { DocInternoRemoverUseCase } from "../services/DocInternoRemover.UseCase";
 
 export class DocInternoController {
   constructor() {}

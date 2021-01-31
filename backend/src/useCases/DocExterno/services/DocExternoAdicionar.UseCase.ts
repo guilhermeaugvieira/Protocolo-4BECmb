@@ -3,7 +3,7 @@ import {
   IDocIn,
   IDocOut,
   IDocRepository,
-} from "../../database/repositories/interfaces/IDocRepository";
+} from "../../../database/repositories/interfaces/IDocRepository";
 
 @injectable()
 export class DocExternoAdicionarUseCase {

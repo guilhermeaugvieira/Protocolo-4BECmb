@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { DocExternoController } from "../useCases/DocExterno/DocExterno.Controller";
+import { DocExternoController } from "../useCases/DocExterno/controllers/DocExterno.Controller";
 
 const rotasDocExterno = Router();
 const controllerDocExterno = new DocExternoController();

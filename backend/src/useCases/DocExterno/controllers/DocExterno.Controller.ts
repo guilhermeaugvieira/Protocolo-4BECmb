@@ -4,13 +4,13 @@ import {
   IDocFiltro,
   IDocIn,
   IDocOut,
-} from "../../database/repositories/interfaces/IDocRepository";
-import { DocExternoAdicionarUseCase } from "./DocExternoAdicionar.UseCase";
-import { DocExternoAtualizarUseCase } from "./DocExternoAtualizar.UseCase";
-import { DocExternoLerUseCase } from "./DocExternoLer.UseCase";
-import { DocExternoLerPorIdUseCase } from "./DocExternoLerPorId.UseCase";
-import { DocExternoProcurarUseCase } from "./DocExternoProcurar.UseCase";
-import { DocExternoRemoverUseCase } from "./DocExternoRemover.UseCase";
+} from "../../../database/repositories/interfaces/IDocRepository";
+import { DocExternoAdicionarUseCase } from "../services/DocExternoAdicionar.UseCase";
+import { DocExternoAtualizarUseCase } from "../services/DocExternoAtualizar.UseCase";
+import { DocExternoLerUseCase } from "../services/DocExternoLer.UseCase";
+import { DocExternoLerPorIdUseCase } from "../services/DocExternoLerPorId.UseCase";
+import { DocExternoProcurarUseCase } from "../services/DocExternoProcurar.UseCase";
+import { DocExternoRemoverUseCase } from "../services/DocExternoRemover.UseCase";
 
 export class DocExternoController {
   constructor() {}

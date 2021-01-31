@@ -1,7 +1,12 @@
 import "reflect-metadata";
 import "./shared/container/dependencies";
 import { server } from "./server";
+import dotenv from "dotenv";
 
-server.listen("3000", () => {
-  console.log("API rodando na porta 3000");
+dotenv.config({
+  path: "./src/environment/.env",
+});
+
+server.listen(process.env.SERVER_PORT, () => {
+  console.log(`API rodando na porta ${process.env.SERVER_PORT}`);
 });

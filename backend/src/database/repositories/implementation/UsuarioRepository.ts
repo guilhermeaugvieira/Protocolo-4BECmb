@@ -6,8 +6,6 @@ import {
   IUsuarioAcessoIn,
 } from "../interfaces/IUsuarioRepository";
 
-import { config } from "../../config/mysql.config";
-
 import mysql2, { ResultSetHeader, RowDataPacket } from "mysql2";
 import { Pool } from "mysql2/promise";
 
@@ -17,7 +15,15 @@ export class UsuarioRepository implements IUsuarioRepository {
   constructor() {}
 
   abrirConexao = (): void => {
-    this.conexaoDB = mysql2.createPool(config).promise();
+    this.conexaoDB = mysql2
+      .createPool({
+        database: process.env.DB_DATABASE,
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        port: parseInt(process.env.DB_PORT),
+      })
+      .promise();
   };
 
   adicionar = async (

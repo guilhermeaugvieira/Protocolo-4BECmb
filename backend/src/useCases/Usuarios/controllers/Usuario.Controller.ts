@@ -4,13 +4,13 @@ import {
   IUsuarioAcessoIn,
   IUsuarioAdicionarIn,
   IUsuarioAtualizarIn,
-} from "../../database/repositories/interfaces/IUsuarioRepository";
-import { UsuarioRemoverUseCase } from "./UsuarioRemover.UseCase";
-import { UsuarioLerUseCase } from "./UsuarioLer.UseCase";
-import { UsuarioAtualizarUseCase } from "./UsuarioAtualizar.UseCase";
-import { UsuarioLerPorIdUseCase } from "./UsuarioLerPorId.UseCase";
-import { UsuarioVericarAcessoUseCase } from "./UsuarioVerificarAcesso.UseCase";
-import { UsuarioAdicionarUseCase } from "./UsuarioAdicionar.UseCase";
+} from "../../../database/repositories/interfaces/IUsuarioRepository";
+import { UsuarioRemoverUseCase } from "../services/UsuarioRemover.UseCase";
+import { UsuarioLerUseCase } from "../services/UsuarioLer.UseCase";
+import { UsuarioAtualizarUseCase } from "../services/UsuarioAtualizar.UseCase";
+import { UsuarioLerPorIdUseCase } from "../services/UsuarioLerPorId.UseCase";
+import { UsuarioVericarAcessoUseCase } from "../services/UsuarioVerificarAcesso.UseCase";
+import { UsuarioAdicionarUseCase } from "../services/UsuarioAdicionar.UseCase";
 
 export class UsuarioController {
   constructor() {}

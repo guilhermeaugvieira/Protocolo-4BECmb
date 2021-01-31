@@ -4,7 +4,6 @@ import {
   IDocOut,
   IDocRepository,
 } from "../interfaces/IDocRepository";
-import { config } from "../../config/mysql.config";
 import mysql2 from "mysql2";
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
@@ -14,7 +13,15 @@ export class DocInternoRepository implements IDocRepository {
   constructor() {}
 
   abrirConexao = (): void => {
-    this.conexaoDB = mysql2.createPool(config).promise();
+    this.conexaoDB = mysql2
+      .createPool({
+        database: process.env.DB_DATABASE,
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        port: parseInt(process.env.DB_PORT),
+      })
+      .promise();
   };
 
   ler = async (): Promise<IDocOut[]> => {

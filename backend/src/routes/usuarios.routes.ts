@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { UsuarioController } from "../useCases/Usuarios/Usuario.Controller";
+import { UsuarioController } from "../useCases/Usuarios/controllers/Usuario.Controller";
 
 const rotasUsuario = Router();
 const controllerUsuario = new UsuarioController();

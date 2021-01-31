@@ -3,7 +3,7 @@ import {
   IUsuarioAcessoIn,
   IUsuarioOut,
   IUsuarioRepository,
-} from "../../database/repositories/interfaces/IUsuarioRepository";
+} from "../../../database/repositories/interfaces/IUsuarioRepository";
 
 @injectable()
 export class UsuarioVericarAcessoUseCase {

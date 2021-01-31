@@ -2,7 +2,7 @@ import { inject, injectable } from "tsyringe";
 import {
   IDocOut,
   IDocRepository,
-} from "../../database/repositories/interfaces/IDocRepository";
+} from "../../../database/repositories/interfaces/IDocRepository";
 
 @injectable()
 export class DocExternoLerUseCase {
