@@ -6,12 +6,12 @@ const controllerUsuario = new UsuarioController();
 
 rotasUsuario.post("/usuario/adicionar", controllerUsuario.adicionarUsuario);
 rotasUsuario.delete("/usuario/remover/:usuarioId", controllerUsuario.remover);
-rotasUsuario.get("/usuarios/ler", controllerUsuario.lerUsuarios);
+rotasUsuario.get("/usuario/ler", controllerUsuario.lerUsuarios);
 rotasUsuario.put(
   "/usuario/atualizar/:usuarioId",
   controllerUsuario.atualizarUsuario
 );
 rotasUsuario.get("/usuario/ler/:usuarioId", controllerUsuario.lerUsuarioPorId);
-rotasUsuario.get("/usuario/verificarAcesso", controllerUsuario.verificarAcesso);
+rotasUsuario.get("/usuario/login", controllerUsuario.login);
 
 export { rotasUsuario };

@@ -23,7 +23,7 @@ export interface IUsuarioAcessoIn {
 }
 
 export interface IUsuarioRepository {
-  adicionar(usuarioRecebido: IUsuarioAdicionarIn): Promise<IUsuarioOut>;
+  adicionar(usuarioRecebido: IUsuarioAdicionarIn): Promise<boolean>;
 
   remover(usuarioId: string): Promise<boolean>;
 
@@ -33,5 +33,5 @@ export interface IUsuarioRepository {
 
   lerPorId(usuarioId: string): Promise<IUsuarioOut>;
 
-  verificarAcesso(usuarioRecebido: IUsuarioAcessoIn): Promise<IUsuarioOut>;
+  login(usuarioLogin: string): Promise<IUsuarioOut>;
 }

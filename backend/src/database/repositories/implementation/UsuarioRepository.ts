@@ -28,8 +28,8 @@ export class UsuarioRepository implements IUsuarioRepository {
 
   adicionar = async (
     usuarioRecebido: IUsuarioAdicionarIn
-  ): Promise<IUsuarioOut> => {
-    let usuarioAdicionado: IUsuarioOut;
+  ): Promise<boolean> => {
+    let usuarioAdicionado: boolean = false;
 
     this.abrirConexao();
 
@@ -39,14 +39,10 @@ export class UsuarioRepository implements IUsuarioRepository {
         [usuarioRecebido.nome, usuarioRecebido.login, usuarioRecebido.senha]
       )
       .then((resultado) => {
-        const { insertId } = <ResultSetHeader>resultado[0];
+        const { affectedRows } = <ResultSetHeader>resultado[0];
 
-        usuarioAdicionado = {
-          login: usuarioRecebido.login,
-          nome: usuarioRecebido.nome,
-          senha: usuarioRecebido.senha,
-          id: insertId,
-        };
+        if (affectedRows === 1) usuarioAdicionado = true;
+        else false;
       })
       .finally(() => {
         this.conexaoDB.end();
@@ -56,7 +52,7 @@ export class UsuarioRepository implements IUsuarioRepository {
   };
 
   remover = async (usuarioId: string): Promise<boolean> => {
-    let usuarioRemovido: boolean;
+    let usuarioRemovido: boolean = false;
 
     this.abrirConexao();
 
@@ -76,7 +72,7 @@ export class UsuarioRepository implements IUsuarioRepository {
   };
 
   ler = async (): Promise<IUsuarioOut[]> => {
-    let usuariosRegistrados: IUsuarioOut[] = null;
+    let usuariosRegistrados: IUsuarioOut[] = [];
     let dadosQuery: IUsuarioOut;
 
     this.abrirConexao();
@@ -87,8 +83,6 @@ export class UsuarioRepository implements IUsuarioRepository {
         const respostaQuery = <RowDataPacket>resultado[0];
 
         if (respostaQuery.length >= 1) {
-          usuariosRegistrados = [];
-
           for (let i = 0; i < respostaQuery.length; i++) {
             dadosQuery = {
               id: respostaQuery[i].UsuarioID,
@@ -159,23 +153,18 @@ export class UsuarioRepository implements IUsuarioRepository {
     return usuarioEncontrado;
   };
 
-  verificarAcesso = async (
-    usuarioRecebido: IUsuarioAcessoIn
-  ): Promise<IUsuarioOut> => {
-    let dadosUsuario: IUsuarioOut = null;
+  login = async (usuarioLogin: string): Promise<IUsuarioOut> => {
+    let usuarioEncontrado: IUsuarioOut;
 
     this.abrirConexao();
 
     await this.conexaoDB
-      .query(
-        "SELECT * FROM usuario WHERE UsuarioLogin = ? and UsuarioSenha = ?",
-        [usuarioRecebido.login, usuarioRecebido.senha]
-      )
+      .query(`SELECT * FROM usuario WHERE UsuarioLogin = '${usuarioLogin}'`)
       .then((resultado) => {
         const respostaQuery = <RowDataPacket>resultado[0];
 
         if (respostaQuery.length === 1) {
-          dadosUsuario = {
+          usuarioEncontrado = {
             id: respostaQuery[0].UsuarioID,
             login: respostaQuery[0].UsuarioLogin,
             nome: respostaQuery[0].UsuarioNome,
@@ -187,6 +176,6 @@ export class UsuarioRepository implements IUsuarioRepository {
         this.conexaoDB.end();
       });
 
-    return dadosUsuario;
+    return usuarioEncontrado;
   };
 }

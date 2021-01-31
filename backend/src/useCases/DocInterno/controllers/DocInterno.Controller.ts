@@ -30,6 +30,9 @@ export class DocInternoController {
   ): Promise<Response> => {
     const documentoID = requisicao.params.documentoID;
 
+    if (documentoID === " ")
+      return resposta.json("Documento não foi enviado para verificação");
+
     const _DocInternoLerPorId = container.resolve(DocInternoLerPorIdUseCase);
 
     return resposta.json(await _DocInternoLerPorId.execute(documentoID));
@@ -126,7 +129,7 @@ export class DocInternoController {
   ): Promise<Response> => {
     const documentoId = requisicao.params.documentoId;
 
-    if (documentoId === undefined || documentoId === "")
+    if (documentoId === " ")
       return resposta.json("Documento não enviado para verificação");
 
     const _DocInternoLerPorId = container.resolve(DocInternoLerPorIdUseCase);
@@ -144,6 +147,9 @@ export class DocInternoController {
     resposta: Response
   ): Promise<Response> => {
     const documentoId = requisicao.params.documentoId;
+
+    if (documentoId === " ")
+      return resposta.json("Documento não enviado para verificação");
 
     const _DocInternoLerPorId = container.resolve(DocInternoLerPorIdUseCase);
 
@@ -239,10 +245,10 @@ export class DocInternoController {
     const parametro = requisicao.params.parametro;
     const valor = requisicao.params.valor;
 
-    if (parametro === undefined)
+    if (parametro === " ")
       return response.json("Parâmetro foi enviado corretamente");
 
-    if (valor === undefined)
+    if (valor === " ")
       return response.json("Valor não foi enviado corretamente");
 
     const filtro: IDocFiltro = {

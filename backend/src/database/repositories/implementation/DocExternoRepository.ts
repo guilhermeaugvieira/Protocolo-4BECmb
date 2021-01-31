@@ -25,7 +25,7 @@ export class DocExternoRepository implements IDocRepository {
   };
 
   ler = async (): Promise<IDocOut[]> => {
-    let documentosRegistrados: IDocOut[] = null;
+    let documentosRegistrados: IDocOut[] = [];
     let dadosQuery: IDocOut;
 
     this.abrirConexao();
@@ -36,8 +36,6 @@ export class DocExternoRepository implements IDocRepository {
         const respostaQuery = <RowDataPacket>resultado[0];
 
         if (respostaQuery.length >= 1) {
-          documentosRegistrados = [];
-
           for (let i = 0; i < respostaQuery.length; i++) {
             dadosQuery = {
               id: respostaQuery[i].ExternoID,
@@ -213,7 +211,7 @@ export class DocExternoRepository implements IDocRepository {
   };
 
   procurar = async (filtro: IDocFiltro): Promise<IDocOut[]> => {
-    let documentosEncontrados: IDocOut[] = null;
+    let documentosEncontrados: IDocOut[] = [];
     let dadosQuery: IDocOut;
 
     this.abrirConexao();
@@ -226,8 +224,6 @@ export class DocExternoRepository implements IDocRepository {
         const respostaQuery = <RowDataPacket>resultado[0];
 
         if (respostaQuery.length >= 1) {
-          documentosEncontrados = [];
-
           for (let i = 0; i < respostaQuery.length; i++) {
             dadosQuery = {
               id: respostaQuery[i].ExternoID,

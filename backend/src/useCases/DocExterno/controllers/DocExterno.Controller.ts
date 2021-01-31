@@ -28,11 +28,14 @@ export class DocExternoController {
     requisicao: Request,
     resposta: Response
   ): Promise<Response> => {
-    const documentoID = requisicao.params.documentoID;
+    const documentoId = requisicao.params.documentoID;
+
+    if (documentoId === " ")
+      return resposta.json("Documento não foi enviado para verificação");
 
     const _DocExternoLerPorId = container.resolve(DocExternoLerPorIdUseCase);
 
-    return resposta.json(await _DocExternoLerPorId.execute(documentoID));
+    return resposta.json(await _DocExternoLerPorId.execute(documentoId));
   };
 
   adicionar = async (
@@ -126,8 +129,8 @@ export class DocExternoController {
   ): Promise<Response> => {
     const documentoId = requisicao.params.documentoId;
 
-    if (documentoId === undefined || documentoId === "")
-      return resposta.json("Documento não enviado para verificação");
+    if (documentoId === " ")
+      return resposta.json("Documento não foi enviado para remoção");
 
     const _DocExternoLerPorId = container.resolve(DocExternoLerPorIdUseCase);
 
@@ -144,6 +147,9 @@ export class DocExternoController {
     resposta: Response
   ): Promise<Response> => {
     const documentoId = requisicao.params.documentoId;
+
+    if (documentoId === " ")
+      return resposta.json("Documento não foi enviado para verificação");
 
     const _DocExternoLerPorId = container.resolve(DocExternoLerPorIdUseCase);
 
@@ -237,13 +243,7 @@ export class DocExternoController {
     resposta: Response
   ): Promise<Response> => {
     const parametro = requisicao.params.parametro;
-    const valor = requisicao.params.valor;
-
-    if (parametro === undefined)
-      return response.json("Parâmetro foi enviado corretamente");
-
-    if (valor === undefined)
-      return response.json("Valor não foi enviado corretamente");
+    let valor = requisicao.params.valor;
 
     const filtro: IDocFiltro = {
       parametro: parametro,

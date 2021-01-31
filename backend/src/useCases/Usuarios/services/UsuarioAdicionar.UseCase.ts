@@ -9,9 +9,7 @@ import {
 export class UsuarioAdicionarUseCase {
   constructor(@inject("UsuarioRepository") private _repo: IUsuarioRepository) {}
 
-  execute = async (
-    usuarioRecebido: IUsuarioAdicionarIn
-  ): Promise<IUsuarioOut> => {
+  execute = async (usuarioRecebido: IUsuarioAdicionarIn): Promise<boolean> => {
     return await this._repo.adicionar(usuarioRecebido);
   };
 }
