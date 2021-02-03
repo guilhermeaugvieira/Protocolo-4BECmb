@@ -12,16 +12,18 @@ export class UsuarioLoginUseCase {
   execute = async (
     usuarioLogin: string,
     usuarioSenha: string
-  ): Promise<boolean> => {
+  ): Promise<string> => {
     const dadosUsuario: IUsuarioOut = await this._repo.login(usuarioLogin);
 
     if (dadosUsuario !== undefined && usuarioSenha === dadosUsuario.senha) {
       const jwt = jsonwebtoken;
       const token = jsonwebtoken.sign(dadosUsuario, process.env.APP_SECRET, {
-        expiresIn: 300,
+        expiresIn: "1d",
       });
-      console.log(token);
-      return true;
-    } else return false;
+
+      return token;
+    } else {
+      return "Usuário não encontrado";
+    }
   };
 }

@@ -2,6 +2,12 @@
   <mat-card class="formContainer_card">
     <mat-card-content class="formContainer_card_conteudo">
       <form [formGroup]="formGrp" class="formLogin" (ngSubmit)="login()">
+        <img
+          src="../../../../../assets/user.png"
+          alt="avatar"
+          mat-card-avatar
+        />
+
         <app-input
           [label]="'Login'"
           [requires]="true"

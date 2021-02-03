@@ -5,6 +5,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { IUsuario } from 'src/app/services/UserService/interfaces/IUsuario';
 import { UserService } from 'src/app/services/UserService/user.service';
 
 @Component({
@@ -30,6 +31,14 @@ export class FormComponent implements OnInit {
   }
 
   login = () => {
-    this._userService.login(this.formGrp);
+    const acesso: IUsuario = {
+      login: this.formGrp.value.userName,
+      senha: this.formGrp.value.password,
+    };
+
+    this._userService.login(acesso).then((dados) => {
+      console.log(dados);
+      localStorage.setItem('USERTOKEN', dados);
+    });
   };
 }

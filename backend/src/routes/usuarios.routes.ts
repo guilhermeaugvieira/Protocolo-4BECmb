@@ -12,6 +12,6 @@ rotasUsuario.put(
   controllerUsuario.atualizarUsuario
 );
 rotasUsuario.get("/usuario/ler/:usuarioId", controllerUsuario.lerUsuarioPorId);
-rotasUsuario.get("/usuario/login", controllerUsuario.login);
+rotasUsuario.post("/usuario/login", controllerUsuario.login);
 
 export { rotasUsuario };

@@ -1,16 +1,33 @@
 import { Injectable } from '@angular/core';
 import { IUsuario } from './interfaces/IUsuario';
-import { FormGroup } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { urlApi } from '../../../environments/environment';
+import jwt from 'jwt-decode';
+
+export enum EnumTokenUsuario {
+  expirado,
+  logado,
+  naoLogado,
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  currentUser: IUsuario;
+  constructor(private http: HttpClient) {}
 
-  constructor() {}
+  login(form: IUsuario) {
+    return this.http.post<string>(`${urlApi}usuario/login`, form).toPromise();
+  }
 
-  login = (form: FormGroup) => {
-    console.log(form);
-  };
+  verificaTokenUsuario(): EnumTokenUsuario {
+    const token = localStorage.getItem('USERTOKEN');
+
+    if (!token) return EnumTokenUsuario.naoLogado;
+
+    if ((<any>jwt(token)).exp * 1000 > Date.now())
+      return EnumTokenUsuario.logado;
+
+    return EnumTokenUsuario.expirado;
+  }
 }
