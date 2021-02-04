@@ -5,6 +5,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { IUsuario } from 'src/app/services/UserService/interfaces/IUsuario';
 import { UserService } from 'src/app/services/UserService/user.service';
 
@@ -20,7 +21,8 @@ export class FormComponent implements OnInit {
 
   constructor(
     private _userService: UserService,
-    private _formBuiler: FormBuilder
+    private _formBuiler: FormBuilder,
+    private _router: Router
   ) {}
 
   ngOnInit(): void {
@@ -37,8 +39,9 @@ export class FormComponent implements OnInit {
     };
 
     this._userService.login(acesso).then((dados) => {
-      console.log(dados);
       localStorage.setItem('USERTOKEN', dados);
     });
+
+    this._router.navigateByUrl('/home');
   };
 }

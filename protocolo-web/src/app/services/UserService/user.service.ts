@@ -3,6 +3,7 @@ import { IUsuario } from './interfaces/IUsuario';
 import { HttpClient } from '@angular/common/http';
 import { urlApi } from '../../../environments/environment';
 import jwt from 'jwt-decode';
+import { Observable } from 'rxjs';
 
 export enum EnumTokenUsuario {
   expirado,
@@ -29,5 +30,9 @@ export class UserService {
       return EnumTokenUsuario.logado;
 
     return EnumTokenUsuario.expirado;
+  }
+
+  getToken() {
+    return localStorage.getItem('USERTOKEN') || '';
   }
 }

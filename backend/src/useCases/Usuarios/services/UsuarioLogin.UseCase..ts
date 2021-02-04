@@ -18,7 +18,7 @@ export class UsuarioLoginUseCase {
     if (dadosUsuario !== undefined && usuarioSenha === dadosUsuario.senha) {
       const jwt = jsonwebtoken;
       const token = jsonwebtoken.sign(dadosUsuario, process.env.APP_SECRET, {
-        expiresIn: "1d",
+        expiresIn: "6h",
       });
 
       return token;
