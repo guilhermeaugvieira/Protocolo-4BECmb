@@ -1,15 +1,14 @@
 import { inject, injectable } from "tsyringe";
 import {
-  IDocFiltroDados,
-  IDocOut,
+  IDocFiltroQuantidade,
   IDocRepository,
 } from "../../../database/repositories/interfaces/IDocRepository";
 
 @injectable()
-export class DocInternoLerUseCase {
+export class DocInternoLerQuantidadeUseCase {
   constructor(@inject("DocInternoRepository") private _repo: IDocRepository) {}
 
-  execute = async (filtro: IDocFiltroDados): Promise<IDocOut[]> => {
-    return await this._repo.ler(filtro);
+  execute = async (filtro: IDocFiltroQuantidade): Promise<number> => {
+    return await this._repo.lerQuantidade(filtro);
   };
 }

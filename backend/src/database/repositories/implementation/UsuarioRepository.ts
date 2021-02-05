@@ -3,7 +3,8 @@ import {
   IUsuarioOut,
   IUsuarioAdicionarIn,
   IUsuarioAtualizarIn,
-  IUsuarioAcessoIn,
+  IUsuarioFiltroDados,
+  IUsuarioFiltroQuantidade,
 } from "../interfaces/IUsuarioRepository";
 
 import mysql2, { ResultSetHeader, RowDataPacket } from "mysql2";
@@ -44,6 +45,10 @@ export class UsuarioRepository implements IUsuarioRepository {
         if (affectedRows === 1) usuarioAdicionado = true;
         else false;
       })
+      .catch((erro) => {
+        usuarioAdicionado = false;
+        console.log(erro);
+      })
       .finally(() => {
         this.conexaoDB.end();
       });
@@ -71,29 +76,127 @@ export class UsuarioRepository implements IUsuarioRepository {
     return usuarioRemovido;
   };
 
-  ler = async (): Promise<IUsuarioOut[]> => {
-    let usuariosRegistrados: IUsuarioOut[] = [];
+  ler = async (filtro: IUsuarioFiltroDados): Promise<IUsuarioOut[]> => {
     let dadosQuery: IUsuarioOut;
+    let contagemFiltros = 0;
+    let usuariosRegistrados: IUsuarioOut[] = [];
 
     this.abrirConexao();
 
-    await this.conexaoDB
-      .query("SELECT * FROM usuario")
-      .then((resultado) => {
-        const respostaQuery = <RowDataPacket>resultado[0];
+    //Montagem da query
+    let sqlQuery = "SELECT * FROM usuario"; //Abertura da query
 
-        if (respostaQuery.length >= 1) {
-          for (let i = 0; i < respostaQuery.length; i++) {
+    if (filtro.ID !== undefined) {
+      //Verifica se é para filtrar o ID
+      sqlQuery += ` WHERE UsuarioID = ${filtro.ID}`;
+      contagemFiltros += 1;
+    }
+
+    if (filtro.Senha !== undefined) {
+      //Verifica se é para filtra a Senha
+      if (contagemFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` UsuarioSenha = '${filtro.Senha}'`;
+      contagemFiltros += 1;
+    }
+
+    if (filtro.Login !== undefined) {
+      //Verifica se é para filtrar o Login
+      if (contagemFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` UsuarioLogin = '${filtro.Login}'`;
+      contagemFiltros += 1;
+    }
+
+    if (filtro.Nome !== undefined) {
+      //Verifica se é para filtrar o Nome
+      if (contagemFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` UsuarioNome = '${filtro.Nome}'`;
+      contagemFiltros += 1;
+    }
+
+    if (filtro.Limit !== undefined) sqlQuery += ` LIMIT ${filtro.Limit}`;
+
+    if (filtro.OffSet !== undefined) sqlQuery += ` OFFSET ${filtro.OffSet}`;
+
+    await this.conexaoDB
+      .query(sqlQuery)
+      .then((resultado) => {
+        const registrosQuery = <RowDataPacket>resultado[0];
+
+        if (registrosQuery.length >= 1) {
+          for (let i = 0; i < registrosQuery.length; i++) {
             dadosQuery = {
-              id: respostaQuery[i].UsuarioID,
-              login: respostaQuery[i].UsuarioLogin,
-              nome: respostaQuery[i].UsuarioNome,
-              senha: respostaQuery[i].UsuarioSenha,
+              id: registrosQuery[i].UsuarioID,
+              login: registrosQuery[i].UsuarioLogin,
+              nome: registrosQuery[i].UsuarioNome,
+              senha: registrosQuery[i].UsuarioSenha,
             };
 
             usuariosRegistrados.push(dadosQuery);
           }
         }
+      })
+      .finally(() => {
+        this.conexaoDB.end();
+      });
+
+    return usuariosRegistrados;
+  };
+
+  lerQuantidade = async (filtro: IUsuarioFiltroQuantidade): Promise<number> => {
+    let dadosQuery: IUsuarioOut;
+    let contagemFiltros = 0;
+    let usuariosRegistrados: number;
+
+    this.abrirConexao();
+
+    //Montagem da query
+    let sqlQuery = "SELECT COUNT(*) as quantUsuarios FROM usuario"; //Abertura da query
+
+    if (filtro.ID !== undefined) {
+      //Verifica se é para filtrar o ID
+      sqlQuery += ` WHERE UsuarioID = ${filtro.ID}`;
+      contagemFiltros += 1;
+    }
+
+    if (filtro.Senha !== undefined) {
+      //Verifica se é para filtra a Senha
+      if (contagemFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` UsuarioSenha = '${filtro.Senha}'`;
+      contagemFiltros += 1;
+    }
+
+    if (filtro.Login !== undefined) {
+      //Verifica se é para filtrar o Login
+      if (contagemFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` UsuarioLogin = '${filtro.Login}'`;
+      contagemFiltros += 1;
+    }
+
+    if (filtro.Nome !== undefined) {
+      //Verifica se é para filtrar o Nome
+      if (contagemFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` UsuarioNome = '${filtro.Nome}'`;
+      contagemFiltros += 1;
+    }
+
+    await this.conexaoDB
+      .query(sqlQuery)
+      .then((resultado) => {
+        const dados = <RowDataPacket>resultado[0];
+
+        usuariosRegistrados = dados[0].quantUsuarios;
       })
       .finally(() => {
         this.conexaoDB.end();

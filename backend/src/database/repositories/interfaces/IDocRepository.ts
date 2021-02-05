@@ -23,13 +23,38 @@ export interface IDocIn {
   destino3: string;
 }
 
-export interface IDocFiltro {
-  parametro: string;
-  valor: string;
+export interface IDocFiltroDados {
+  ID?: number;
+  especificacao?: string;
+  Datadocumento?: string;
+  Procedencia?: string;
+  Datarecebimento?: string;
+  Nrprotocolo?: string;
+  Assunto?: string;
+  Destino1?: string;
+  Destino2?: string;
+  Destino3?: string;
+  Limit?: number;
+  OffSet?: number;
+}
+
+export interface IDocFiltroQuantidade {
+  ID?: number;
+  especificacao?: string;
+  Datadocumento?: string;
+  Procedencia?: string;
+  Datarecebimento?: string;
+  Nrprotocolo?: string;
+  Assunto?: string;
+  Destino1?: string;
+  Destino2?: string;
+  Destino3?: string;
 }
 
 export interface IDocRepository {
-  ler(): Promise<IDocOut[]>;
+  ler(filtro: IDocFiltroDados): Promise<IDocOut[]>;
+
+  lerQuantidade(filtro: IDocFiltroQuantidade): Promise<number>;
 
   adicionar(documentoRecebido: IDocIn): Promise<IDocOut>;
 

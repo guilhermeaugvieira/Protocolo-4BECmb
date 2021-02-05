@@ -1,15 +1,15 @@
 import { Request, response, Response } from "express";
 import { container } from "tsyringe";
 import {
-  IDocFiltro,
+  IDocFiltroDados,
+  IDocFiltroQuantidade,
   IDocIn,
   IDocOut,
 } from "../../../database/repositories/interfaces/IDocRepository";
 import { DocExternoAdicionarUseCase } from "../services/DocExternoAdicionar.UseCase";
 import { DocExternoAtualizarUseCase } from "../services/DocExternoAtualizar.UseCase";
 import { DocExternoLerUseCase } from "../services/DocExternoLer.UseCase";
-import { DocExternoLerPorIdUseCase } from "../services/DocExternoLerPorId.UseCase";
-import { DocExternoProcurarUseCase } from "../services/DocExternoProcurar.UseCase";
+import { DocExternoLerQuantidadeUseCase } from "../services/DocExternoLerQuantidade.UseCase";
 import { DocExternoRemoverUseCase } from "../services/DocExternoRemover.UseCase";
 
 export class DocExternoController {
@@ -19,23 +19,119 @@ export class DocExternoController {
     requisicao: Request,
     resposta: Response
   ): Promise<Response> => {
+    const filtro: IDocFiltroDados = {
+      Assunto:
+        requisicao.query.Assunto !== undefined
+          ? <string>requisicao.query.Assunto
+          : undefined,
+      Datadocumento:
+        requisicao.query.Datadocumento !== undefined
+          ? <string>requisicao.query.Datadocumento
+          : undefined,
+      Datarecebimento:
+        requisicao.query.Datarecebimento !== undefined
+          ? <string>requisicao.query.Datarecebimento
+          : undefined,
+      ID:
+        requisicao.query.ID !== undefined
+          ? parseInt(<string>requisicao.query.ID)
+          : undefined,
+      Procedencia:
+        requisicao.query.Procedencia !== undefined
+          ? <string>requisicao.query.Procedencia
+          : undefined,
+      Nrprotocolo:
+        requisicao.query.Nrprotocolo !== undefined
+          ? <string>requisicao.query.Nrprotocolo
+          : undefined,
+      especificacao:
+        requisicao.query.especificacao !== undefined
+          ? <string>requisicao.query.especificacao
+          : undefined,
+      Destino1:
+        requisicao.query.Destino1 !== undefined
+          ? <string>requisicao.query.Destino1
+          : undefined,
+      Destino2:
+        requisicao.query.Destino2 !== undefined
+          ? <string>requisicao.query.Destino2
+          : undefined,
+      Destino3:
+        requisicao.query.Destino3 !== undefined
+          ? <string>requisicao.query.Destino3
+          : undefined,
+      Limit:
+        requisicao.query.Limit !== undefined
+          ? parseInt(<string>requisicao.query.Limit)
+          : undefined,
+      OffSet:
+        requisicao.query.OffSet !== undefined &&
+        requisicao.query.Limit !== undefined
+          ? parseInt(<string>requisicao.query.OffSet)
+          : undefined,
+    };
+
+    console.log(filtro);
+
     const _DocExternoLer = container.resolve(DocExternoLerUseCase);
 
-    return resposta.json(await _DocExternoLer.execute());
+    return resposta.json(await _DocExternoLer.execute(filtro));
   };
 
-  lerDocumentoPorId = async (
+  lerDocumentosQuantidade = async (
     requisicao: Request,
     resposta: Response
   ): Promise<Response> => {
-    const documentoId = requisicao.params.documentoID;
+    const filtro: IDocFiltroQuantidade = {
+      Assunto:
+        requisicao.query.Assunto !== undefined
+          ? <string>requisicao.query.Assunto
+          : undefined,
+      Datadocumento:
+        requisicao.query.Datadocumento !== undefined
+          ? <string>requisicao.query.Datadocumento
+          : undefined,
+      Datarecebimento:
+        requisicao.query.Datarecebimento !== undefined
+          ? <string>requisicao.query.Datarecebimento
+          : undefined,
+      ID:
+        requisicao.query.ID !== undefined
+          ? parseInt(<string>requisicao.query.ID)
+          : undefined,
+      Procedencia:
+        requisicao.query.Procedencia !== undefined
+          ? <string>requisicao.query.Procedencia
+          : undefined,
+      Nrprotocolo:
+        requisicao.query.Nrprotocolo !== undefined
+          ? <string>requisicao.query.Nrprotocolo
+          : undefined,
+      especificacao:
+        requisicao.query.especificacao !== undefined
+          ? <string>requisicao.query.especificacao
+          : undefined,
+      Destino1:
+        requisicao.query.Destino1 !== undefined
+          ? <string>requisicao.query.Destino1
+          : undefined,
+      Destino2:
+        requisicao.query.Destino2 !== undefined
+          ? <string>requisicao.query.Destino2
+          : undefined,
+      Destino3:
+        requisicao.query.Destino3 !== undefined
+          ? <string>requisicao.query.Destino3
+          : undefined,
+    };
 
-    if (documentoId === " ")
-      return resposta.json("Documento não foi enviado para verificação");
+    console.log(filtro);
 
-    const _DocExternoLerPorId = container.resolve(DocExternoLerPorIdUseCase);
+    const _DocExternoLerQuantidade = container.resolve(
+      DocExternoLerQuantidadeUseCase
+    );
 
-    return resposta.json(await _DocExternoLerPorId.execute(documentoId));
+    return resposta.json(await _DocExternoLerQuantidade.execute(filtro));
   };
 
   adicionar = async (
@@ -132,9 +228,15 @@ export class DocExternoController {
     if (documentoId === " ")
       return resposta.json("Documento não foi enviado para remoção");
 
-    const _DocExternoLerPorId = container.resolve(DocExternoLerPorIdUseCase);
+    const _DocInternoLerQuantidade = container.resolve(
+      DocExternoLerQuantidadeUseCase
+    );
 
-    if ((await _DocExternoLerPorId.execute(documentoId)) === null)
+    const filtro: IDocFiltroQuantidade = {
+      ID: parseInt(documentoId),
+    };
+
+    if ((await _DocInternoLerQuantidade.execute(filtro)) === 0)
       return resposta.json("Documento não existe");
 
     const _DocExternoRemover = container.resolve(DocExternoRemoverUseCase);
@@ -151,9 +253,15 @@ export class DocExternoController {
     if (documentoId === " ")
       return resposta.json("Documento não foi enviado para verificação");
 
-    const _DocExternoLerPorId = container.resolve(DocExternoLerPorIdUseCase);
+    const _DocInternoLerQuantidade = container.resolve(
+      DocExternoLerQuantidadeUseCase
+    );
 
-    if ((await _DocExternoLerPorId.execute(documentoId)) === null)
+    const filtro: IDocFiltroQuantidade = {
+      ID: parseInt(documentoId),
+    };
+
+    if ((await _DocInternoLerQuantidade.execute(filtro)) === 0)
       return resposta.json("Documento não existe");
 
     const {
@@ -236,22 +344,5 @@ export class DocExternoController {
     return resposta.json(
       await _DocExternoAtualizar.execute(documentoAtualizado)
     );
-  };
-
-  procurar = async (
-    requisicao: Request,
-    resposta: Response
-  ): Promise<Response> => {
-    const parametro = requisicao.params.parametro;
-    let valor = requisicao.params.valor;
-
-    const filtro: IDocFiltro = {
-      parametro: parametro,
-      valor: valor,
-    };
-
-    const _DocExternoProcurar = container.resolve(DocExternoProcurarUseCase);
-
-    return resposta.json(await _DocExternoProcurar.execute(filtro));
   };
 }

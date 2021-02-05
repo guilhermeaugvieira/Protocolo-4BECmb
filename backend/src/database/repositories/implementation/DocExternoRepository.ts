@@ -1,5 +1,6 @@
 import {
-  IDocFiltro,
+  IDocFiltroDados,
+  IDocFiltroQuantidade,
   IDocIn,
   IDocOut,
   IDocRepository,
@@ -24,14 +25,91 @@ export class DocExternoRepository implements IDocRepository {
       .promise();
   };
 
-  ler = async (): Promise<IDocOut[]> => {
+  ler = async (filtro: IDocFiltroDados): Promise<IDocOut[]> => {
     let documentosRegistrados: IDocOut[] = [];
     let dadosQuery: IDocOut;
 
     this.abrirConexao();
 
+    let sqlQuery: string;
+    let quantidadeFiltros = 0;
+
+    sqlQuery = "SELECT * FROM doc_externo";
+
+    if (filtro.ID !== undefined) {
+      sqlQuery += ` WHERE ExternoID = ${filtro.ID}`;
+      quantidadeFiltros += 1;
+    }
+
+    if (filtro.Assunto !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoAssunto LIKE '%${filtro.Assunto}%'`;
+    }
+
+    if (filtro.Datadocumento !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDatadocumento = '${filtro.Datadocumento}'`;
+    }
+
+    if (filtro.Datarecebimento !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDatarecebimento = '${filtro.Datarecebimento}'`;
+    }
+
+    if (filtro.Destino1 !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDestino1 LIKE '%${filtro.Destino1}%'`;
+    }
+
+    if (filtro.Destino2 !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDestino2 LIKE '%${filtro.Destino2}%'`;
+    }
+
+    if (filtro.Destino3 !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDestino3 LIKE '%${filtro.Destino3}%'`;
+    }
+
+    if (filtro.Nrprotocolo !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoNrprotocolo = '${filtro.Nrprotocolo}'`;
+    }
+
+    if (filtro.Procedencia !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoProcedencia LIKE '%${filtro.Procedencia}%'`;
+    }
+
+    if (filtro.especificacao !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` Externoespecificacao LIKE '%${filtro.especificacao}%'`;
+    }
+
+    if (filtro.Limit !== undefined) sqlQuery += ` LIMIT ${filtro.Limit}`;
+
+    if (filtro.OffSet !== undefined) sqlQuery += ` OFFSET ${filtro.OffSet}`;
+
     await this.conexaoDB
-      .query("SELECT * FROM doc_externo")
+      .query(sqlQuery)
       .then((resultado) => {
         const respostaQuery = <RowDataPacket>resultado[0];
 
@@ -53,6 +131,98 @@ export class DocExternoRepository implements IDocRepository {
             documentosRegistrados.push(dadosQuery);
           }
         }
+      })
+      .finally(() => {
+        this.conexaoDB.end();
+      });
+
+    return documentosRegistrados;
+  };
+
+  lerQuantidade = async (filtro: IDocFiltroQuantidade): Promise<number> => {
+    let documentosRegistrados: number;
+
+    this.abrirConexao();
+
+    let sqlQuery: string;
+    let quantidadeFiltros = 0;
+
+    sqlQuery = "SELECT COUNT(*) as quantDocumentos FROM doc_externo";
+
+    if (filtro.ID !== undefined) {
+      sqlQuery += ` WHERE ExternoID = ${filtro.ID}`;
+      quantidadeFiltros += 1;
+    }
+
+    if (filtro.Assunto !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoAssunto LIKE '%${filtro.Assunto}%'`;
+    }
+
+    if (filtro.Datadocumento !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDatadocumento = '${filtro.Datadocumento}'`;
+    }
+
+    if (filtro.Datarecebimento !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDatarecebimento = '${filtro.Datarecebimento}'`;
+    }
+
+    if (filtro.Destino1 !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDestino1 LIKE '%${filtro.Destino1}%'`;
+    }
+
+    if (filtro.Destino2 !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDestino2 LIKE '%${filtro.Destino2}%'`;
+    }
+
+    if (filtro.Destino3 !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDestino3 LIKE '%${filtro.Destino3}%'`;
+    }
+
+    if (filtro.Nrprotocolo !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoNrprotocolo = '${filtro.Nrprotocolo}'`;
+    }
+
+    if (filtro.Procedencia !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoProcedencia LIKE '%${filtro.Procedencia}%'`;
+    }
+
+    if (filtro.especificacao !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` Externoespecificacao LIKE '%${filtro.especificacao}%'`;
+    }
+
+    await this.conexaoDB
+      .query(sqlQuery)
+      .then((resultado) => {
+        const dados = <RowDataPacket>resultado[0];
+
+        documentosRegistrados = dados[0].quantDocumentos;
       })
       .finally(() => {
         this.conexaoDB.end();

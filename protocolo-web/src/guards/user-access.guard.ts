@@ -29,7 +29,6 @@ export class UserAccessGuard implements CanActivate {
     if (this.userService.verificaTokenUsuario() === EnumTokenUsuario.logado)
       return true;
 
-    this.router.navigateByUrl('/login');
     return false;
   }
 }
