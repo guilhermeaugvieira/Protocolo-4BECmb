@@ -63,38 +63,6 @@ export class DocInternoRepository implements IDocRepository {
     return documentosRegistrados;
   };
 
-  lerPorId = async (documentoId: string): Promise<IDocOut> => {
-    let documentoEncontrado: IDocOut = null;
-
-    this.abrirConexao();
-
-    await this.conexaoDB
-      .query("SELECT * FROM doc_interno WHERE InternoID = ?", [documentoId])
-      .then((resultado) => {
-        const respostaQuery = <RowDataPacket>resultado[0];
-
-        if (respostaQuery.length === 1) {
-          documentoEncontrado = {
-            id: respostaQuery[0].InternoID,
-            assunto: respostaQuery[0].InternoAssunto,
-            dataDocumento: respostaQuery[0].InternoDataDocumento,
-            dataRecebimento: respostaQuery[0].InternoDatarecebimento,
-            especificacao: respostaQuery[0].Internoespecificacao,
-            nrProtocolo: respostaQuery[0].InternoNrprotocolo,
-            procedencia: respostaQuery[0].InternoProcedencia,
-            destino1: respostaQuery[0].InternoDestino1,
-            destino2: respostaQuery[0].InternoDestino2,
-            destino3: respostaQuery[0].InternoDestino3,
-          };
-        }
-      })
-      .finally(() => {
-        this.conexaoDB.end();
-      });
-
-    return documentoEncontrado;
-  };
-
   adicionar = async (documentoRecebido: IDocIn): Promise<IDocOut> => {
     let documentoAdicionado: IDocOut;
 
@@ -210,46 +178,5 @@ export class DocInternoRepository implements IDocRepository {
       });
 
     return documentoAtualizado;
-  };
-
-  procurar = async (filtro: IDocFiltro): Promise<IDocOut[]> => {
-    let documentosEncontrados: IDocOut[] = null;
-    let dadosQuery: IDocOut;
-
-    this.abrirConexao();
-
-    await this.conexaoDB
-      .query(
-        `SELECT * FROM doc_interno WHERE ${filtro.parametro} LIKE '%${filtro.valor}%'`
-      )
-      .then((resultado) => {
-        const respostaQuery = <RowDataPacket>resultado[0];
-
-        if (respostaQuery.length >= 1) {
-          documentosEncontrados = [];
-
-          for (let i = 0; i < respostaQuery.length; i++) {
-            dadosQuery = {
-              id: respostaQuery[i].InternoID,
-              assunto: respostaQuery[i].InternoAssunto,
-              dataDocumento: respostaQuery[i].InternoDataDocumento,
-              dataRecebimento: respostaQuery[i].InternoDatarecebimento,
-              especificacao: respostaQuery[i].Internoespecificacao,
-              nrProtocolo: respostaQuery[i].InternoNrprotocolo,
-              procedencia: respostaQuery[i].InternoProcedencia,
-              destino1: respostaQuery[i].InternoDestino1,
-              destino2: respostaQuery[i].InternoDestino2,
-              destino3: respostaQuery[i].InternoDestino3,
-            };
-
-            documentosEncontrados.push(dadosQuery);
-          }
-        }
-      })
-      .finally(() => {
-        this.conexaoDB.end();
-      });
-
-    return documentosEncontrados;
   };
 }

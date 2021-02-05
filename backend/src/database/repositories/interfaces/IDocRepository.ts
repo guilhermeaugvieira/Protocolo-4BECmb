@@ -31,13 +31,9 @@ export interface IDocFiltro {
 export interface IDocRepository {
   ler(): Promise<IDocOut[]>;
 
-  lerPorId(documentoId: string): Promise<IDocOut>;
-
   adicionar(documentoRecebido: IDocIn): Promise<IDocOut>;
 
   remover(documentoId: string): Promise<boolean>;
 
   atualizar(documentoRecebido: IDocOut): Promise<boolean>;
-
-  procurar(filtro: IDocFiltro): Promise<IDocOut[]>;
 }

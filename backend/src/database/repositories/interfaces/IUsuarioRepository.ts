@@ -30,8 +30,4 @@ export interface IUsuarioRepository {
   ler(): Promise<IUsuarioOut[]>;
 
   atualizar(usuarioRecebido: IUsuarioAtualizarIn): Promise<boolean>;
-
-  lerPorId(usuarioId: string): Promise<IUsuarioOut>;
-
-  login(usuarioLogin: string): Promise<IUsuarioOut>;
 }

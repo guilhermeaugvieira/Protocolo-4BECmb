@@ -5,8 +5,10 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { IUsuario } from 'src/app/services/UserService/interfaces/IUsuario';
 import { UserService } from 'src/app/services/UserService/user.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-form',
@@ -20,7 +22,9 @@ export class FormComponent implements OnInit {
 
   constructor(
     private _userService: UserService,
-    private _formBuiler: FormBuilder
+    private _formBuiler: FormBuilder,
+    private _router: Router,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -37,8 +41,18 @@ export class FormComponent implements OnInit {
     };
 
     this._userService.login(acesso).then((dados) => {
-      console.log(dados);
-      localStorage.setItem('USERTOKEN', dados);
+      if (dados !== 'Usuário não encontrado') {
+        localStorage.setItem('USERTOKEN', dados);
+        this._router.navigateByUrl('/home');
+      } else {
+        this.openSnackBar('Login Incorreto');
+      }
+    });
+  };
+
+  openSnackBar = (mensagem: string) => {
+    this._snackBar.open(mensagem, 'X', {
+      duration: 3000,
     });
   };
 }

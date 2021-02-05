@@ -61,38 +61,6 @@ export class DocExternoRepository implements IDocRepository {
     return documentosRegistrados;
   };
 
-  lerPorId = async (documentoId: string): Promise<IDocOut> => {
-    let documentoEncontrado: IDocOut = null;
-
-    this.abrirConexao();
-
-    await this.conexaoDB
-      .query("SELECT * FROM doc_externo WHERE ExternoID = ?", [documentoId])
-      .then((resultado) => {
-        const respostaQuery = <RowDataPacket>resultado[0];
-
-        if (respostaQuery.length === 1) {
-          documentoEncontrado = {
-            id: respostaQuery[0].ExternoID,
-            assunto: respostaQuery[0].ExternoAssunto,
-            dataDocumento: respostaQuery[0].ExternoDataDocumento,
-            dataRecebimento: respostaQuery[0].ExternoDatarecebimento,
-            especificacao: respostaQuery[0].Externoespecificacao,
-            nrProtocolo: respostaQuery[0].ExternoNrprotocolo,
-            procedencia: respostaQuery[0].ExternoProcedencia,
-            destino1: respostaQuery[0].ExternoDestino1,
-            destino2: respostaQuery[0].ExternoDestino2,
-            destino3: respostaQuery[0].ExternoDestino3,
-          };
-        }
-      })
-      .finally(() => {
-        this.conexaoDB.end();
-      });
-
-    return documentoEncontrado;
-  };
-
   adicionar = async (documentoRecebido: IDocIn): Promise<IDocOut> => {
     let documentoAdicionado: IDocOut;
 
@@ -208,44 +176,5 @@ export class DocExternoRepository implements IDocRepository {
       });
 
     return documentoAtualizado;
-  };
-
-  procurar = async (filtro: IDocFiltro): Promise<IDocOut[]> => {
-    let documentosEncontrados: IDocOut[] = [];
-    let dadosQuery: IDocOut;
-
-    this.abrirConexao();
-
-    await this.conexaoDB
-      .query(
-        `SELECT * FROM doc_externo WHERE ${filtro.parametro} LIKE '%${filtro.valor}%'`
-      )
-      .then((resultado) => {
-        const respostaQuery = <RowDataPacket>resultado[0];
-
-        if (respostaQuery.length >= 1) {
-          for (let i = 0; i < respostaQuery.length; i++) {
-            dadosQuery = {
-              id: respostaQuery[i].ExternoID,
-              assunto: respostaQuery[i].ExternoAssunto,
-              dataDocumento: respostaQuery[i].ExternoDataDocumento,
-              dataRecebimento: respostaQuery[i].ExternoDatarecebimento,
-              especificacao: respostaQuery[i].Externoespecificacao,
-              nrProtocolo: respostaQuery[i].ExternoNrprotocolo,
-              procedencia: respostaQuery[i].ExternoProcedencia,
-              destino1: respostaQuery[i].ExternoDestino1,
-              destino2: respostaQuery[i].ExternoDestino2,
-              destino3: respostaQuery[i].ExternoDestino3,
-            };
-
-            documentosEncontrados.push(dadosQuery);
-          }
-        }
-      })
-      .finally(() => {
-        this.conexaoDB.end();
-      });
-
-    return documentosEncontrados;
   };
 }

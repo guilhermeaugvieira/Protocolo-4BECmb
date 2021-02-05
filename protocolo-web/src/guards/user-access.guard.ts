@@ -26,8 +26,6 @@ export class UserAccessGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    console.log(this.userService.verificaTokenUsuario());
-
     if (this.userService.verificaTokenUsuario() === EnumTokenUsuario.logado)
       return true;
 

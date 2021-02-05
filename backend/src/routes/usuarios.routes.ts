@@ -11,7 +11,5 @@ rotasUsuario.put(
   "/usuario/atualizar/:usuarioId",
   controllerUsuario.atualizarUsuario
 );
-rotasUsuario.get("/usuario/ler/:usuarioId", controllerUsuario.lerUsuarioPorId);
-rotasUsuario.post("/usuario/login", controllerUsuario.login);
 
 export { rotasUsuario };
