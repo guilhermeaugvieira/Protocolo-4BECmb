@@ -6,6 +6,7 @@ import {
 } from "../../../database/repositories/interfaces/IUsuarioRepository";
 import { UsuarioLerUseCase } from "./UsuarioLer.UseCase";
 import jsonwebtoken from "jsonwebtoken";
+import bcrypt, { compare } from "bcrypt";
 
 @injectable()
 export class UsuarioLoginUseCase {
@@ -17,18 +18,23 @@ export class UsuarioLoginUseCase {
   ): Promise<string> => {
     const _UsuarioLer = container.resolve(UsuarioLerUseCase);
 
+    let resultadoPesquisa: IUsuarioOut[];
     let usuarioBanco: IUsuarioOut;
 
-    (await _UsuarioLer.execute(filtro)).map((usuario) => {
-      usuarioBanco = usuario;
-    });
+    resultadoPesquisa = await _UsuarioLer.execute(filtro);
 
-    if (senhaUsuario === usuarioBanco.senha) {
-      const token = jsonwebtoken.sign(usuarioBanco, process.env.APP_SECRET, {
-        expiresIn: "6h",
+    if (resultadoPesquisa.length === 1) {
+      (await _UsuarioLer.execute(filtro)).map((usuario) => {
+        usuarioBanco = usuario;
       });
 
-      return token;
+      if (bcrypt.compareSync(senhaUsuario, usuarioBanco.senha)) {
+        const token = jsonwebtoken.sign(usuarioBanco, process.env.APP_SECRET, {
+          expiresIn: "6h",
+        });
+
+        return token;
+      }
     }
 
     return "Usuário não encontrado";
