@@ -27,7 +27,7 @@ export class UsuarioController {
           : undefined,
       Login:
         requisicao.query.Login !== undefined
-          ? <string>requisicao.query.UsuarioLogin
+          ? <string>requisicao.query.Login
           : undefined,
       Nome:
         requisicao.query.Nome !== undefined
