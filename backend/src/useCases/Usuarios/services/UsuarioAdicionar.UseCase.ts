@@ -3,17 +3,14 @@ import {
   IUsuarioRepository,
   IUsuarioAdicionarIn,
 } from "../../../database/repositories/interfaces/IUsuarioRepository";
-import bcrypt from "bcrypt";
+import { SistemaHash } from "../../../providers/BCrypt";
 
 @injectable()
 export class UsuarioAdicionarUseCase {
   constructor(@inject("UsuarioRepository") private _repo: IUsuarioRepository) {}
 
   execute = async (usuarioRecebido: IUsuarioAdicionarIn): Promise<boolean> => {
-    const hash = bcrypt.hashSync(
-      usuarioRecebido.senha,
-      parseInt(process.env.BCRYPT_SALTS)
-    );
+    const hash = new SistemaHash().gerar(usuarioRecebido.senha);
 
     usuarioRecebido.senha = hash;
 

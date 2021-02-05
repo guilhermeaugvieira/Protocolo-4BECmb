@@ -30,4 +30,8 @@ export class UserService {
 
     return EnumTokenUsuario.expirado;
   }
+
+  getToken(): string {
+    return localStorage.getItem('USERTOKEN');
+  }
 }
