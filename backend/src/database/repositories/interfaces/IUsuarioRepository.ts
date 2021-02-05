@@ -17,7 +17,7 @@ export interface IUsuarioAtualizarIn {
   id: string;
 }
 
-export interface IUsuarioAcessoIn {
+export interface IUsuarioFiltro {
   login: string;
   senha: string;
 }
