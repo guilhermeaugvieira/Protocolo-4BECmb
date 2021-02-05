@@ -1,16 +1,17 @@
 import { Request, Response } from "express";
 import { container } from "tsyringe";
 import {
-  IUsuarioAcessoIn,
   IUsuarioAdicionarIn,
   IUsuarioAtualizarIn,
+  IUsuarioFiltroDados,
+  IUsuarioFiltroQuantidade,
 } from "../../../database/repositories/interfaces/IUsuarioRepository";
 import { UsuarioRemoverUseCase } from "../services/UsuarioRemover.UseCase";
 import { UsuarioLerUseCase } from "../services/UsuarioLer.UseCase";
 import { UsuarioAtualizarUseCase } from "../services/UsuarioAtualizar.UseCase";
-import { UsuarioLerPorIdUseCase } from "../services/UsuarioLerPorId.UseCase";
 import { UsuarioAdicionarUseCase } from "../services/UsuarioAdicionar.UseCase";
-import { UsuarioLoginUseCase } from "../services/UsuarioLogin.UseCase.";
+import { UsuarioLerQuantidadeUseCase } from "../services/UsuarioLerQuantidade.UseCase";
+import { UsuarioLoginUseCase } from "../services/UsuarioLogin.UseCase";
 
 export class UsuarioController {
   constructor() {}
@@ -19,23 +20,67 @@ export class UsuarioController {
     requisicao: Request,
     resposta: Response
   ): Promise<Response> => {
+    const filtro: IUsuarioFiltroDados = {
+      ID:
+        requisicao.query.ID !== undefined
+          ? parseInt(<string>requisicao.query.ID)
+          : undefined,
+      Login:
+        requisicao.query.Login !== undefined
+          ? <string>requisicao.query.UsuarioLogin
+          : undefined,
+      Nome:
+        requisicao.query.Nome !== undefined
+          ? <string>requisicao.query.Nome
+          : undefined,
+      Senha:
+        requisicao.query.Senha !== undefined
+          ? <string>requisicao.query.Senha
+          : undefined,
+      Limit:
+        requisicao.query.Limit !== undefined
+          ? parseInt(<string>requisicao.query.Limit)
+          : undefined,
+      OffSet:
+        requisicao.query.OffSet !== undefined &&
+        requisicao.query.Limit !== undefined
+          ? parseInt(<string>requisicao.query.OffSet)
+          : undefined,
+    };
+
     const _UsuarioLer = container.resolve(UsuarioLerUseCase);
 
-    return resposta.json(await _UsuarioLer.execute());
+    return resposta.json(await _UsuarioLer.execute(filtro));
   };
 
-  lerUsuarioPorId = async (
+  lerUsuariosQuantidade = async (
     requisicao: Request,
     resposta: Response
   ): Promise<Response> => {
-    const usuarioId = requisicao.params.usuarioId;
+    const filtro: IUsuarioFiltroQuantidade = {
+      ID:
+        requisicao.query.ID !== undefined
+          ? parseInt(<string>requisicao.query.ID)
+          : undefined,
+      Login:
+        requisicao.query.Login !== undefined
+          ? <string>requisicao.query.Login
+          : undefined,
+      Nome:
+        requisicao.query.Nome !== undefined
+          ? <string>requisicao.query.Nome
+          : undefined,
+      Senha:
+        requisicao.query.Senha !== undefined
+          ? <string>requisicao.query.Senha
+          : undefined,
+    };
 
-    if (usuarioId === " ")
-      return resposta.json("Usuário não enviado para verificação");
+    const _UsuarioLerQuantidade = container.resolve(
+      UsuarioLerQuantidadeUseCase
+    );
 
-    const _UsuarioLerPorId = container.resolve(UsuarioLerPorIdUseCase);
-
-    return resposta.json(await _UsuarioLerPorId.execute(usuarioId));
+    return resposta.json(await _UsuarioLerQuantidade.execute(filtro));
   };
 
   remover = async (
@@ -47,9 +92,15 @@ export class UsuarioController {
     if (usuarioId === " ")
       return resposta.json("Usuário não enviado para remoção");
 
-    const _UsuarioLerPorId = container.resolve(UsuarioLerPorIdUseCase);
+    const filtro: IUsuarioFiltroQuantidade = {
+      ID: parseInt(usuarioId),
+    };
 
-    if ((await _UsuarioLerPorId.execute(usuarioId)) === null)
+    const _UsuarioLerQuantidade = container.resolve(
+      UsuarioLerQuantidadeUseCase
+    );
+
+    if ((await _UsuarioLerQuantidade.execute(filtro)) === 0)
       return resposta.json("Usuário não registrado no sistema");
 
     const _UsuarioRemover = container.resolve(UsuarioRemoverUseCase);
@@ -72,6 +123,17 @@ export class UsuarioController {
     if (senha === undefined || senha.length < 1 || senha.length > 20)
       return resposta.json("Senha não foi enviada corretamente");
 
+    const _UsuarioLerQuantidade = container.resolve(
+      UsuarioLerQuantidadeUseCase
+    );
+
+    const filtro: IUsuarioFiltroQuantidade = {
+      Login: usuario,
+    };
+
+    if ((await _UsuarioLerQuantidade.execute(filtro)) !== 0)
+      return resposta.json("Já existe usuário com esse login cadastrado");
+
     const dadosUsuario: IUsuarioAdicionarIn = {
       nome: nome,
       login: usuario,
@@ -90,12 +152,18 @@ export class UsuarioController {
     const { nome, senha } = requisicao.body;
     const usuarioId = requisicao.params.usuarioId;
 
-    const _UsuarioLerPorId = container.resolve(UsuarioLerPorIdUseCase);
-
     if (usuarioId === " ")
       return resposta.json("Usuário não foi enviado corretamente");
 
-    if ((await _UsuarioLerPorId.execute(usuarioId)) === null)
+    const _UsuarioLerQuantidade = container.resolve(
+      UsuarioLerQuantidadeUseCase
+    );
+
+    const filtro: IUsuarioFiltroQuantidade = {
+      ID: parseInt(usuarioId),
+    };
+
+    if ((await _UsuarioLerQuantidade.execute(filtro)) === 0)
       return resposta.json("Usuário não registrado no sistema");
 
     if (senha === undefined || senha.length < 1 || senha.length > 20)
@@ -121,14 +189,16 @@ export class UsuarioController {
   ): Promise<Response> => {
     const { login, senha } = requisicao.body;
 
-    if (senha === undefined || senha.length < 1 || senha.length > 20)
-      return resposta.json("Senha não foi enviada corretamente");
+    if (login === undefined) return resposta.json("Usuário não enviado");
 
-    if (login === undefined || login.length < 1 || login.length > 20)
-      return resposta.json("Login não foi enviado corretamente");
+    if (senha === undefined) return resposta.json("Senha não enviada");
+
+    const filtro: IUsuarioFiltroDados = {
+      Login: login,
+    };
 
     const _UsuarioLogin = container.resolve(UsuarioLoginUseCase);
 
-    return resposta.json(await _UsuarioLogin.execute(login, senha));
+    return resposta.json(await _UsuarioLogin.execute(filtro, senha));
   };
 }

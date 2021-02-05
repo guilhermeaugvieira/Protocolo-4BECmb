@@ -1,1 +1,37 @@
-<p>home works!</p>
+<div class="homeContainer">
+  <header class="homeContainer_header">
+    <div class="homeContainer_header_leftSide"></div>
+    <div class="homeContainer_header_center">
+      <a routerLink="/home">
+        <span class="nomeApp">Protocolo Web</span>
+      </a>
+    </div>
+    <div class="homeContainer_header_rightSide">
+      <a [mat-menu-trigger-for]="menuUsuario">
+        <img
+          src="../../../../../assets/user.png"
+          alt="avatar"
+          mat-card-avatar
+        /><br />
+        {{ nomeUsuario }}
+      </a>
+      <mat-menu #menuUsuario="matMenu">
+        <button mat-menu-item (click)="logout()">Logout</button>
+        <button mat-menu-item>Atualizar dados</button>
+      </mat-menu>
+    </div>
+  </header>
+  <div class="homeContainer_dados">
+    <div class="homeContainer_dados_menu">
+      <button mat-raised-button [routerLink]="'/home/docExterno'">
+        <mat-icon> logout </mat-icon> Documentos Externos
+      </button>
+      <button mat-raised-button routerLink="docInterno">
+        <mat-icon> login </mat-icon> Documentos Internos
+      </button>
+    </div>
+    <div class="homeContainer_dados_conteudo">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,6 @@
 import {
-  IDocFiltro,
+  IDocFiltroDados,
+  IDocFiltroQuantidade,
   IDocIn,
   IDocOut,
   IDocRepository,
@@ -24,14 +25,91 @@ export class DocExternoRepository implements IDocRepository {
       .promise();
   };
 
-  ler = async (): Promise<IDocOut[]> => {
+  ler = async (filtro: IDocFiltroDados): Promise<IDocOut[]> => {
     let documentosRegistrados: IDocOut[] = [];
     let dadosQuery: IDocOut;
 
     this.abrirConexao();
 
+    let sqlQuery: string;
+    let quantidadeFiltros = 0;
+
+    sqlQuery = "SELECT * FROM doc_externo";
+
+    if (filtro.ID !== undefined) {
+      sqlQuery += ` WHERE ExternoID = ${filtro.ID}`;
+      quantidadeFiltros += 1;
+    }
+
+    if (filtro.Assunto !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoAssunto LIKE '%${filtro.Assunto}%'`;
+    }
+
+    if (filtro.Datadocumento !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDatadocumento = '${filtro.Datadocumento}'`;
+    }
+
+    if (filtro.Datarecebimento !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDatarecebimento = '${filtro.Datarecebimento}'`;
+    }
+
+    if (filtro.Destino1 !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDestino1 LIKE '%${filtro.Destino1}%'`;
+    }
+
+    if (filtro.Destino2 !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDestino2 LIKE '%${filtro.Destino2}%'`;
+    }
+
+    if (filtro.Destino3 !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDestino3 LIKE '%${filtro.Destino3}%'`;
+    }
+
+    if (filtro.Nrprotocolo !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoNrprotocolo = '${filtro.Nrprotocolo}'`;
+    }
+
+    if (filtro.Procedencia !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoProcedencia LIKE '%${filtro.Procedencia}%'`;
+    }
+
+    if (filtro.especificacao !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` Externoespecificacao LIKE '%${filtro.especificacao}%'`;
+    }
+
+    if (filtro.Limit !== undefined) sqlQuery += ` LIMIT ${filtro.Limit}`;
+
+    if (filtro.OffSet !== undefined) sqlQuery += ` OFFSET ${filtro.OffSet}`;
+
     await this.conexaoDB
-      .query("SELECT * FROM doc_externo")
+      .query(sqlQuery)
       .then((resultado) => {
         const respostaQuery = <RowDataPacket>resultado[0];
 
@@ -61,36 +139,96 @@ export class DocExternoRepository implements IDocRepository {
     return documentosRegistrados;
   };
 
-  lerPorId = async (documentoId: string): Promise<IDocOut> => {
-    let documentoEncontrado: IDocOut = null;
+  lerQuantidade = async (filtro: IDocFiltroQuantidade): Promise<number> => {
+    let documentosRegistrados: number;
 
     this.abrirConexao();
 
-    await this.conexaoDB
-      .query("SELECT * FROM doc_externo WHERE ExternoID = ?", [documentoId])
-      .then((resultado) => {
-        const respostaQuery = <RowDataPacket>resultado[0];
+    let sqlQuery: string;
+    let quantidadeFiltros = 0;
 
-        if (respostaQuery.length === 1) {
-          documentoEncontrado = {
-            id: respostaQuery[0].ExternoID,
-            assunto: respostaQuery[0].ExternoAssunto,
-            dataDocumento: respostaQuery[0].ExternoDataDocumento,
-            dataRecebimento: respostaQuery[0].ExternoDatarecebimento,
-            especificacao: respostaQuery[0].Externoespecificacao,
-            nrProtocolo: respostaQuery[0].ExternoNrprotocolo,
-            procedencia: respostaQuery[0].ExternoProcedencia,
-            destino1: respostaQuery[0].ExternoDestino1,
-            destino2: respostaQuery[0].ExternoDestino2,
-            destino3: respostaQuery[0].ExternoDestino3,
-          };
-        }
+    sqlQuery = "SELECT COUNT(*) as quantDocumentos FROM doc_externo";
+
+    if (filtro.ID !== undefined) {
+      sqlQuery += ` WHERE ExternoID = ${filtro.ID}`;
+      quantidadeFiltros += 1;
+    }
+
+    if (filtro.Assunto !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoAssunto LIKE '%${filtro.Assunto}%'`;
+    }
+
+    if (filtro.Datadocumento !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDatadocumento = '${filtro.Datadocumento}'`;
+    }
+
+    if (filtro.Datarecebimento !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDatarecebimento = '${filtro.Datarecebimento}'`;
+    }
+
+    if (filtro.Destino1 !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDestino1 LIKE '%${filtro.Destino1}%'`;
+    }
+
+    if (filtro.Destino2 !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDestino2 LIKE '%${filtro.Destino2}%'`;
+    }
+
+    if (filtro.Destino3 !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoDestino3 LIKE '%${filtro.Destino3}%'`;
+    }
+
+    if (filtro.Nrprotocolo !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoNrprotocolo = '${filtro.Nrprotocolo}'`;
+    }
+
+    if (filtro.Procedencia !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` ExternoProcedencia LIKE '%${filtro.Procedencia}%'`;
+    }
+
+    if (filtro.especificacao !== undefined) {
+      if (quantidadeFiltros >= 1) sqlQuery += " AND";
+      else sqlQuery += " WHERE";
+
+      sqlQuery += ` Externoespecificacao LIKE '%${filtro.especificacao}%'`;
+    }
+
+    await this.conexaoDB
+      .query(sqlQuery)
+      .then((resultado) => {
+        const dados = <RowDataPacket>resultado[0];
+
+        documentosRegistrados = dados[0].quantDocumentos;
       })
       .finally(() => {
         this.conexaoDB.end();
       });
 
-    return documentoEncontrado;
+    return documentosRegistrados;
   };
 
   adicionar = async (documentoRecebido: IDocIn): Promise<IDocOut> => {
@@ -208,44 +346,5 @@ export class DocExternoRepository implements IDocRepository {
       });
 
     return documentoAtualizado;
-  };
-
-  procurar = async (filtro: IDocFiltro): Promise<IDocOut[]> => {
-    let documentosEncontrados: IDocOut[] = [];
-    let dadosQuery: IDocOut;
-
-    this.abrirConexao();
-
-    await this.conexaoDB
-      .query(
-        `SELECT * FROM doc_externo WHERE ${filtro.parametro} LIKE '%${filtro.valor}%'`
-      )
-      .then((resultado) => {
-        const respostaQuery = <RowDataPacket>resultado[0];
-
-        if (respostaQuery.length >= 1) {
-          for (let i = 0; i < respostaQuery.length; i++) {
-            dadosQuery = {
-              id: respostaQuery[i].ExternoID,
-              assunto: respostaQuery[i].ExternoAssunto,
-              dataDocumento: respostaQuery[i].ExternoDataDocumento,
-              dataRecebimento: respostaQuery[i].ExternoDatarecebimento,
-              especificacao: respostaQuery[i].Externoespecificacao,
-              nrProtocolo: respostaQuery[i].ExternoNrprotocolo,
-              procedencia: respostaQuery[i].ExternoProcedencia,
-              destino1: respostaQuery[i].ExternoDestino1,
-              destino2: respostaQuery[i].ExternoDestino2,
-              destino3: respostaQuery[i].ExternoDestino3,
-            };
-
-            documentosEncontrados.push(dadosQuery);
-          }
-        }
-      })
-      .finally(() => {
-        this.conexaoDB.end();
-      });
-
-    return documentosEncontrados;
   };
 }

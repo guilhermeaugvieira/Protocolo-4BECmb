@@ -2,14 +2,14 @@ import { inject, injectable } from "tsyringe";
 import {
   IUsuarioRepository,
   IUsuarioOut,
-  IUsuarioFiltroDados,
+  IUsuarioFiltroQuantidade,
 } from "../../../database/repositories/interfaces/IUsuarioRepository";
 
 @injectable()
-export class UsuarioLerUseCase {
+export class UsuarioLerQuantidadeUseCase {
   constructor(@inject("UsuarioRepository") private _repo: IUsuarioRepository) {}
 
-  execute = async (filtro: IUsuarioFiltroDados): Promise<IUsuarioOut[]> => {
-    return await this._repo.ler(filtro);
+  execute = async (filtro: IUsuarioFiltroQuantidade): Promise<number> => {
+    return await this._repo.lerQuantidade(filtro);
   };
 }

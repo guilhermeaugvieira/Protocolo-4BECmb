@@ -17,9 +17,20 @@ export interface IUsuarioAtualizarIn {
   id: string;
 }
 
-export interface IUsuarioAcessoIn {
-  login: string;
-  senha: string;
+export interface IUsuarioFiltroDados {
+  ID?: number;
+  Nome?: string;
+  Login?: string;
+  Senha?: string;
+  OffSet?: number;
+  Limit?: number;
+}
+
+export interface IUsuarioFiltroQuantidade {
+  ID?: number;
+  Nome?: string;
+  Login?: string;
+  Senha?: string;
 }
 
 export interface IUsuarioRepository {
@@ -27,11 +38,9 @@ export interface IUsuarioRepository {
 
   remover(usuarioId: string): Promise<boolean>;
 
-  ler(): Promise<IUsuarioOut[]>;
+  ler(filtro: IUsuarioFiltroDados): Promise<IUsuarioOut[]>;
+
+  lerQuantidade(fitro: IUsuarioFiltroQuantidade): Promise<number>;
 
   atualizar(usuarioRecebido: IUsuarioAtualizarIn): Promise<boolean>;
-
-  lerPorId(usuarioId: string): Promise<IUsuarioOut>;
-
-  login(usuarioLogin: string): Promise<IUsuarioOut>;
 }

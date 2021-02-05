@@ -11,7 +11,10 @@ rotasUsuario.put(
   "/usuario/atualizar/:usuarioId",
   controllerUsuario.atualizarUsuario
 );
-rotasUsuario.get("/usuario/ler/:usuarioId", controllerUsuario.lerUsuarioPorId);
+rotasUsuario.get(
+  "/usuario/lerQuantidade",
+  controllerUsuario.lerUsuariosQuantidade
+);
 rotasUsuario.post("/usuario/login", controllerUsuario.login);
 
 export { rotasUsuario };

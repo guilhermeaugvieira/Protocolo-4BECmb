@@ -11,9 +11,9 @@ rotasDocExterno.get(
   controllerDocExterno.lerDocumentos
 );
 rotasDocExterno.get(
-  "/doc_externo/ler/:documentoID",
+  "/doc_externo/lerQuantidade",
   autenticacaoMiddleWare,
-  controllerDocExterno.lerDocumentoPorId
+  controllerDocExterno.lerDocumentosQuantidade
 );
 rotasDocExterno.post(
   "/doc_externo/adicionar",
@@ -29,11 +29,6 @@ rotasDocExterno.put(
   "/doc_externo/atualizar/:documentoId",
   autenticacaoMiddleWare,
   controllerDocExterno.atualizar
-);
-rotasDocExterno.get(
-  "/doc_externo/procurar/:parametro/:valor",
-  autenticacaoMiddleWare,
-  controllerDocExterno.procurar
 );
 
 export { rotasDocExterno };

@@ -11,9 +11,9 @@ rotasDocInterno.get(
   controllerDocInterno.lerDocumentos
 );
 rotasDocInterno.get(
-  "/doc_interno/ler/:documentoID",
+  "/doc_interno/lerQuantidade",
   autenticacaoMiddleWare,
-  controllerDocInterno.lerDocumentoPorId
+  controllerDocInterno.lerDocumentosQuantidade
 );
 rotasDocInterno.post(
   "/doc_interno/adicionar",
@@ -29,11 +29,6 @@ rotasDocInterno.put(
   "/doc_interno/atualizar/:documentoId",
   autenticacaoMiddleWare,
   controllerDocInterno.atualizar
-);
-rotasDocInterno.get(
-  "/doc_interno/procurar/:parametro/:valor",
-  autenticacaoMiddleWare,
-  controllerDocInterno.procurar
 );
 
 export { rotasDocInterno };
