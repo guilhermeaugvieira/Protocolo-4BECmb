@@ -71,8 +71,6 @@ export class DocExternoController {
           : undefined,
     };
 
-    console.log(filtro);
-
     const _DocExternoLer = container.resolve(DocExternoLerUseCase);
 
     return resposta.json(await _DocExternoLer.execute(filtro));
@@ -124,8 +122,6 @@ export class DocExternoController {
           ? <string>requisicao.query.Destino3
           : undefined,
     };
-
-    console.log(filtro);
 
     const _DocExternoLerQuantidade = container.resolve(
       DocExternoLerQuantidadeUseCase

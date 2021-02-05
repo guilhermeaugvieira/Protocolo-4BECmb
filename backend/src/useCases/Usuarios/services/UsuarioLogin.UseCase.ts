@@ -6,7 +6,7 @@ import {
 } from "../../../database/repositories/interfaces/IUsuarioRepository";
 import { UsuarioLerUseCase } from "./UsuarioLer.UseCase";
 import jsonwebtoken from "jsonwebtoken";
-import bcrypt, { compare } from "bcrypt";
+import { SistemaHash } from "../../../providers/BCrypt";
 
 @injectable()
 export class UsuarioLoginUseCase {
@@ -28,7 +28,7 @@ export class UsuarioLoginUseCase {
         usuarioBanco = usuario;
       });
 
-      if (bcrypt.compareSync(senhaUsuario, usuarioBanco.senha)) {
+      if (new SistemaHash().comparar(senhaUsuario, usuarioBanco.senha)) {
         const token = jsonwebtoken.sign(usuarioBanco, process.env.APP_SECRET, {
           expiresIn: "6h",
         });
