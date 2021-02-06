@@ -14,8 +14,6 @@ export class DocExternoComponent implements OnInit {
   ngOnInit(): void {
     this._DocExternoService.obterNumeroRegistros().then((dados) => {
       this.numeroRegistros = dados;
-
-      console.log(this.numeroRegistros);
     });
   }
 }
