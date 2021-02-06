@@ -1,3 +1,5 @@
+@import "../../modules/shared/paleta.scss";
+
 * {
   box-sizing: border-box;
 }
@@ -9,14 +11,14 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 1px;
-  background-color: #ccc;
+  gap: 2px;
+  background-color: $color-primary-800;
 
   &_header {
     width: 100%;
     padding: 0;
     margin: 0;
-    background-color: #b3e0ff;
+    background-color: $color-primary-600;
     flex: 15;
     display: flex;
     flex-direction: row;
@@ -29,7 +31,7 @@
 
       a {
         text-decoration: none;
-        color: #000;
+        color: $color-primary-100;
         text-align: center;
 
         span.nomeApp {
@@ -44,13 +46,13 @@
     display: flex;
     position: relative;
     flex-direction: row;
-    gap: 1px;
+    gap: 2px;
     margin: 0;
     flex: 85;
 
     &_menu {
       height: 100%;
-      background-color: #ddd;
+      background-color: $color-primary-500;
       flex: 15;
       display: flex;
       flex-direction: column;
@@ -60,9 +62,14 @@
       gap: 10px;
 
       button {
-        background-color: #bbb;
+        background-color: $color-info-100;
         width: 100%;
         height: 50px;
+
+        &:hover {
+          color: #999;
+          transition: all 0.2s;
+        }
       }
     }
 
