@@ -17,8 +17,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class FormComponent implements OnInit {
   formGrp: FormGroup;
-  userName: FormControl;
-  password: FormControl;
 
   constructor(
     private _userService: UserService,
@@ -29,8 +27,8 @@ export class FormComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGrp = this._formBuiler.group({
-      userName: new FormControl(this.userName, [Validators.required]),
-      password: new FormControl(this.password, [Validators.required]),
+      userName: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required]),
     });
   }
 

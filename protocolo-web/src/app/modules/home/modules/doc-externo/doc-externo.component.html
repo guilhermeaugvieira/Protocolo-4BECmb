@@ -1,6 +1,19 @@
 <div class="externoContainer">
   <header class="externoContainer_header">
-    <div class="externoContainer_header_filtro">A</div>
+    <div class="externoContainer_header_filtros">
+      <form [formGroup]="formGrp"></form>
+      <button
+        type="submit"
+        mat-raised-button
+        class="btnInput"
+        [disabled]="formGrp.invalid || formGrp.pending"
+      >
+        <mat-icon> search </mat-icon>
+        Pesquisar
+      </button>
+    </div>
   </header>
-  <div class="externoContainer_content">B</div>
+  <main class="externoContainer_content">
+    <div class="externoContainer_content_table">B</div>
+  </main>
 </div>

@@ -4,12 +4,12 @@
   display: flex;
 
   &_apresentacao {
-    width: 50%;
+    flex: 1;
     height: 100%;
   }
 
   &_form {
-    width: 50%;
+    flex: 1;
     height: 100%;
   }
 }
