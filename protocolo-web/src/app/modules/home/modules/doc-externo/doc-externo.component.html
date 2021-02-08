@@ -1,19 +1,42 @@
 <div class="externoContainer">
   <header class="externoContainer_header">
+    <span class="indicadorFiltros">Filtrar por </span>
     <div class="externoContainer_header_filtros">
-      <form [formGroup]="formGrp"></form>
-      <button
-        type="submit"
-        mat-raised-button
-        class="btnInput"
-        [disabled]="formGrp.invalid || formGrp.pending"
-      >
-        <mat-icon> search </mat-icon>
-        Pesquisar
-      </button>
+      <form [formGroup]="formGrp" (ngSubmit)="search()">
+        <select [formControl]="$any(formGrp.controls.filtro)">
+          <option *ngFor="let opcao of opcoesFiltro" value="{{ opcao.valor }}">
+            {{ opcao.valorVisualizado }}
+          </option>
+        </select>
+        <input type="text" [formControl]="$any(formGrp.controls.resposta)" />
+        <button type="submit" mat-raised-button class="btnInput">
+          <mat-icon> search </mat-icon>
+        </button>
+      </form>
+    </div>
+    <div class="externoContainer_header_paginacao">
+      <span class="indicadorPagina">Itens por página</span>
+      <select [formControl]="$any(formGrp.controls.paginacao)">
+        <option
+          *ngFor="let paginacao of opcoesPaginacao"
+          value="{{ paginacao }}"
+        >
+          {{ paginacao }}
+        </option>
+      </select>
     </div>
   </header>
   <main class="externoContainer_content">
     <div class="externoContainer_content_table">B</div>
+    <div class="externoContainer_content_page">
+      <button class="btnInput"><mat-icon>fast_rewind</mat-icon></button>
+      <input
+        type="number"
+        min="1"
+        min="{{ this.numeroPaginas }}"
+        [formControl]="$any(formGrp.controls.numeroPagina)"
+      />
+      <button class="btnInput"><mat-icon>fast_forward</mat-icon></button>
+    </div>
   </main>
 </div>

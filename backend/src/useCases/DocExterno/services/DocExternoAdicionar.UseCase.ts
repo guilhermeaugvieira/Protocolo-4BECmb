@@ -9,7 +9,7 @@ import {
 export class DocExternoAdicionarUseCase {
   constructor(@inject("DocExternoRepository") private _repo: IDocRepository) {}
 
-  execute = async (documentoRecebido: IDocIn): Promise<IDocOut> => {
+  execute = async (documentoRecebido: IDocIn): Promise<Boolean> => {
     return await this._repo.adicionar(documentoRecebido);
   };
 }

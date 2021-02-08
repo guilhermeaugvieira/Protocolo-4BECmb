@@ -5,31 +5,17 @@ import {
   IDocOut,
   IDocRepository,
 } from "../interfaces/IDocRepository";
-import mysql2 from "mysql2";
-import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import { inject, injectable } from "tsyringe";
+import { IDatabase } from "../../../providers/interfaces/IDatabase";
 
+@injectable()
 export class DocExternoRepository implements IDocRepository {
-  conexaoDB: Pool;
-
-  constructor() {}
-
-  abrirConexao = (): void => {
-    this.conexaoDB = mysql2
-      .createPool({
-        database: process.env.DB_DATABASE,
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        port: parseInt(process.env.DB_PORT),
-      })
-      .promise();
-  };
+  constructor(@inject("Database") private _Database: IDatabase) {}
 
   ler = async (filtro: IDocFiltroDados): Promise<IDocOut[]> => {
     let documentosRegistrados: IDocOut[] = [];
     let dadosQuery: IDocOut;
-
-    this.abrirConexao();
 
     let sqlQuery: string;
     let quantidadeFiltros = 0;
@@ -62,25 +48,11 @@ export class DocExternoRepository implements IDocRepository {
       sqlQuery += ` ExternoDatarecebimento = '${filtro.Datarecebimento}'`;
     }
 
-    if (filtro.Destino1 !== undefined) {
+    if (filtro.Destino !== undefined) {
       if (quantidadeFiltros >= 1) sqlQuery += " AND";
       else sqlQuery += " WHERE";
 
-      sqlQuery += ` ExternoDestino1 LIKE '%${filtro.Destino1}%'`;
-    }
-
-    if (filtro.Destino2 !== undefined) {
-      if (quantidadeFiltros >= 1) sqlQuery += " AND";
-      else sqlQuery += " WHERE";
-
-      sqlQuery += ` ExternoDestino2 LIKE '%${filtro.Destino2}%'`;
-    }
-
-    if (filtro.Destino3 !== undefined) {
-      if (quantidadeFiltros >= 1) sqlQuery += " AND";
-      else sqlQuery += " WHERE";
-
-      sqlQuery += ` ExternoDestino3 LIKE '%${filtro.Destino3}%'`;
+      sqlQuery += ` ExternoDestino1 LIKE '%${filtro.Destino}%' OR ExternoDestino2 LIKE '%${filtro.Destino}%' OR ExternoDestino3 LIKE '%${filtro.Destino}%'`;
     }
 
     if (filtro.Nrprotocolo !== undefined) {
@@ -108,7 +80,9 @@ export class DocExternoRepository implements IDocRepository {
 
     if (filtro.OffSet !== undefined) sqlQuery += ` OFFSET ${filtro.OffSet}`;
 
-    await this.conexaoDB
+    const con = this._Database.abrirConexao();
+
+    await con
       .query(sqlQuery)
       .then((resultado) => {
         const respostaQuery = <RowDataPacket>resultado[0];
@@ -118,7 +92,7 @@ export class DocExternoRepository implements IDocRepository {
             dadosQuery = {
               id: respostaQuery[i].ExternoID,
               assunto: respostaQuery[i].ExternoAssunto,
-              dataDocumento: respostaQuery[i].ExternoDataDocumento,
+              dataDocumento: respostaQuery[i].ExternoDatadocumento,
               dataRecebimento: respostaQuery[i].ExternoDatarecebimento,
               especificacao: respostaQuery[i].Externoespecificacao,
               nrProtocolo: respostaQuery[i].ExternoNrprotocolo,
@@ -132,17 +106,18 @@ export class DocExternoRepository implements IDocRepository {
           }
         }
       })
+      .catch((erro) => {
+        console.log(erro);
+      })
       .finally(() => {
-        this.conexaoDB.end();
+        con.end();
       });
 
     return documentosRegistrados;
   };
 
   lerQuantidade = async (filtro: IDocFiltroQuantidade): Promise<number> => {
-    let documentosRegistrados: number;
-
-    this.abrirConexao();
+    let documentosRegistrados = 0;
 
     let sqlQuery: string;
     let quantidadeFiltros = 0;
@@ -175,25 +150,11 @@ export class DocExternoRepository implements IDocRepository {
       sqlQuery += ` ExternoDatarecebimento = '${filtro.Datarecebimento}'`;
     }
 
-    if (filtro.Destino1 !== undefined) {
+    if (filtro.Destino !== undefined) {
       if (quantidadeFiltros >= 1) sqlQuery += " AND";
       else sqlQuery += " WHERE";
 
-      sqlQuery += ` ExternoDestino1 LIKE '%${filtro.Destino1}%'`;
-    }
-
-    if (filtro.Destino2 !== undefined) {
-      if (quantidadeFiltros >= 1) sqlQuery += " AND";
-      else sqlQuery += " WHERE";
-
-      sqlQuery += ` ExternoDestino2 LIKE '%${filtro.Destino2}%'`;
-    }
-
-    if (filtro.Destino3 !== undefined) {
-      if (quantidadeFiltros >= 1) sqlQuery += " AND";
-      else sqlQuery += " WHERE";
-
-      sqlQuery += ` ExternoDestino3 LIKE '%${filtro.Destino3}%'`;
+      sqlQuery += ` ExternoDestino1 LIKE '%${filtro.Destino}%' OR ExternoDestino2 LIKE '%${filtro.Destino}%' OR ExternoDestino3 LIKE '%${filtro.Destino}%'`;
     }
 
     if (filtro.Nrprotocolo !== undefined) {
@@ -217,30 +178,35 @@ export class DocExternoRepository implements IDocRepository {
       sqlQuery += ` Externoespecificacao LIKE '%${filtro.especificacao}%'`;
     }
 
-    await this.conexaoDB
+    const con = this._Database.abrirConexao();
+
+    await con
       .query(sqlQuery)
       .then((resultado) => {
         const dados = <RowDataPacket>resultado[0];
 
         documentosRegistrados = dados[0].quantDocumentos;
       })
+      .catch((erro) => {
+        console.log(erro);
+      })
       .finally(() => {
-        this.conexaoDB.end();
+        con.end();
       });
 
     return documentosRegistrados;
   };
 
-  adicionar = async (documentoRecebido: IDocIn): Promise<IDocOut> => {
-    let documentoAdicionado: IDocOut;
+  adicionar = async (documentoRecebido: IDocIn): Promise<Boolean> => {
+    let documentoAdicionado = false;
 
-    this.abrirConexao();
+    const con = this._Database.abrirConexao();
 
-    await this.conexaoDB
+    await con
       .query(
         "INSERT INTO doc_externo( \
       Externoespecificacao, \
-      ExternoDataDocumento, \
+      ExternoDatadocumento, \
       ExternoProcedencia, \
       ExternoDatarecebimento, \
       ExternoNrprotocolo, \
@@ -262,23 +228,15 @@ export class DocExternoRepository implements IDocRepository {
         ]
       )
       .then((resultado) => {
-        const { insertId } = <ResultSetHeader>resultado[0];
+        const { affectedRows } = <ResultSetHeader>resultado[0];
 
-        documentoAdicionado = {
-          id: insertId,
-          assunto: documentoRecebido.assunto,
-          dataDocumento: documentoRecebido.dataDocumento,
-          dataRecebimento: documentoRecebido.dataRecebimento,
-          especificacao: documentoRecebido.especificacao,
-          nrProtocolo: documentoRecebido.nrProtocolo,
-          procedencia: documentoRecebido.procedencia,
-          destino1: documentoRecebido.destino1,
-          destino2: documentoRecebido.destino2,
-          destino3: documentoRecebido.destino3,
-        };
+        if (affectedRows === 1) documentoAdicionado = true;
+      })
+      .catch((erro) => {
+        console.log(erro);
       })
       .finally(() => {
-        this.conexaoDB.end();
+        con.end();
       });
 
     return documentoAdicionado;
@@ -287,9 +245,9 @@ export class DocExternoRepository implements IDocRepository {
   remover = async (documentoId: string): Promise<boolean> => {
     let documentoRemovido = false;
 
-    this.abrirConexao();
+    const con = this._Database.abrirConexao();
 
-    await this.conexaoDB
+    await con
       .query("DELETE FROM doc_externo WHERE ExternoID = ?", [documentoId])
       .then((resultado) => {
         const { affectedRows } = <ResultSetHeader>resultado[0];
@@ -297,8 +255,11 @@ export class DocExternoRepository implements IDocRepository {
         if (affectedRows === 1) documentoRemovido = true;
         else documentoRemovido = false;
       })
+      .catch((erro) => {
+        console.log(erro);
+      })
       .finally(() => {
-        this.conexaoDB.end();
+        con.end();
       });
 
     return documentoRemovido;
@@ -307,13 +268,13 @@ export class DocExternoRepository implements IDocRepository {
   atualizar = async (documentoRecebido: IDocOut): Promise<boolean> => {
     let documentoAtualizado = false;
 
-    this.abrirConexao();
+    const con = this._Database.abrirConexao();
 
-    await this.conexaoDB
+    await con
       .query(
         "UPDATE doc_externo SET \
       Externoespecificacao = ?, \
-      ExternoDataDocumento = ?, \
+      ExternoDatadocumento = ?, \
       ExternoProcedencia = ?, \
       ExternoDatarecebimento = ?, \
       ExternoNrprotocolo = ?, \
@@ -339,10 +300,12 @@ export class DocExternoRepository implements IDocRepository {
         const { affectedRows } = <ResultSetHeader>resultado[0];
 
         if (affectedRows === 1) documentoAtualizado = true;
-        else documentoAtualizado = false;
+      })
+      .catch((erro) => {
+        console.log(erro);
       })
       .finally(() => {
-        this.conexaoDB.end();
+        con.end();
       });
 
     return documentoAtualizado;
