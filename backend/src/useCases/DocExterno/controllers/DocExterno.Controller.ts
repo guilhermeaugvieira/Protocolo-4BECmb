@@ -48,17 +48,9 @@ export class DocExternoController {
         requisicao.query.especificacao !== undefined
           ? <string>requisicao.query.especificacao
           : undefined,
-      Destino1:
-        requisicao.query.Destino1 !== undefined
-          ? <string>requisicao.query.Destino1
-          : undefined,
-      Destino2:
-        requisicao.query.Destino2 !== undefined
-          ? <string>requisicao.query.Destino2
-          : undefined,
-      Destino3:
-        requisicao.query.Destino3 !== undefined
-          ? <string>requisicao.query.Destino3
+      Destino:
+        requisicao.query.Destino !== undefined
+          ? <string>requisicao.query.Destino
           : undefined,
       Limit:
         requisicao.query.Limit !== undefined
@@ -109,17 +101,9 @@ export class DocExternoController {
         requisicao.query.especificacao !== undefined
           ? <string>requisicao.query.especificacao
           : undefined,
-      Destino1:
-        requisicao.query.Destino1 !== undefined
-          ? <string>requisicao.query.Destino1
-          : undefined,
-      Destino2:
-        requisicao.query.Destino2 !== undefined
-          ? <string>requisicao.query.Destino2
-          : undefined,
-      Destino3:
-        requisicao.query.Destino3 !== undefined
-          ? <string>requisicao.query.Destino3
+      Destino:
+        requisicao.query.Destino !== undefined
+          ? <string>requisicao.query.Destino
           : undefined,
     };
 

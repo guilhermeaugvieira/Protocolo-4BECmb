@@ -31,9 +31,7 @@ export interface IDocFiltroDados {
   Datarecebimento?: string;
   Nrprotocolo?: string;
   Assunto?: string;
-  Destino1?: string;
-  Destino2?: string;
-  Destino3?: string;
+  Destino?: string;
   Limit?: number;
   OffSet?: number;
 }
@@ -46,9 +44,7 @@ export interface IDocFiltroQuantidade {
   Datarecebimento?: string;
   Nrprotocolo?: string;
   Assunto?: string;
-  Destino1?: string;
-  Destino2?: string;
-  Destino3?: string;
+  Destino?: string;
 }
 
 export interface IDocRepository {
@@ -56,7 +52,7 @@ export interface IDocRepository {
 
   lerQuantidade(filtro: IDocFiltroQuantidade): Promise<number>;
 
-  adicionar(documentoRecebido: IDocIn): Promise<IDocOut>;
+  adicionar(documentoRecebido: IDocIn): Promise<Boolean>;
 
   remover(documentoId: string): Promise<boolean>;
 

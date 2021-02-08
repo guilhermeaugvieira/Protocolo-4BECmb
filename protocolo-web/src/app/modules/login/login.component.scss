@@ -1,17 +1,15 @@
-@import "../shared/estiloDosComponentes.scss";
-
 #loginContainer {
   width: 100%;
   height: 100%;
   display: flex;
 
   &_apresentacao {
-    width: 50%;
+    flex: 1;
     height: 100%;
   }
 
   &_form {
-    width: 50%;
+    flex: 1;
     height: 100%;
   }
 }

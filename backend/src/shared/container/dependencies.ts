@@ -6,19 +6,21 @@ import { DocExternoRepository } from "../../database/repositories/implementation
 import { DocInternoRepository } from "../../database/repositories/implementation/DocInternoRepository";
 import { IDocRepository } from "../../database/repositories/interfaces/IDocRepository";
 import { IUsuarioRepository } from "../../database/repositories/interfaces/IUsuarioRepository";
+import { IDatabase } from "../../providers/interfaces/IDatabase";
+import { MySQL } from "../../providers/implementation/Database";
 
 //Injeções
-container.registerInstance<IUsuarioRepository>(
-  "UsuarioRepository",
-  new UsuarioRepository()
-);
 
-container.registerInstance<IDocRepository>(
-  "DocExternoRepository",
-  new DocExternoRepository()
-);
+container.register<IDatabase>("Database", { useClass: MySQL });
 
-container.registerInstance<IDocRepository>(
-  "DocInternoRepository",
-  new DocInternoRepository()
-);
+container.register<IUsuarioRepository>("UsuarioRepository", {
+  useClass: UsuarioRepository,
+});
+
+container.register<IDocRepository>("DocExternoRepository", {
+  useClass: DocExternoRepository,
+});
+
+container.register<IDocRepository>("DocInternoRepository", {
+  useClass: DocInternoRepository,
+});

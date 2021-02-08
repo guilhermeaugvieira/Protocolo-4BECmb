@@ -1,0 +1,149 @@
+@import "../../../shared/paleta.scss";
+
+* {
+  box-sizing: border-box;
+}
+
+:host {
+  width: 100%;
+  height: 100%;
+  background-color: $color-primary-800;
+  display: flex;
+
+  .externoContainer {
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+
+    &_header {
+      flex: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1%;
+      width: 100%;
+      flex-direction: column;
+      gap: 3%;
+
+      .indicadorFiltros {
+        color: #fff;
+        font-size: 1rem;
+      }
+
+      &_filtros {
+        width: 100%;
+        height: 100%;
+        flex: 3;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        border-radius: 5px;
+        gap: 10px;
+
+        form {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+
+          select {
+            flex: 2;
+            height: 50%;
+            font-size: 1rem;
+          }
+
+          input {
+            flex: 3;
+            height: 50%;
+            font-size: 1rem;
+            text-align: center;
+          }
+
+          button {
+            flex: 1;
+            height: 50%;
+            background-color: $color-success-500;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+          }
+        }
+      }
+
+      &_paginacao {
+        width: 100%;
+        height: 100%;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: row;
+        border-radius: 5px;
+        gap: 10px;
+
+        .indicadorPagina {
+          font-size: 1rem;
+          color: #fff;
+        }
+      }
+    }
+
+    &_content {
+      flex: 17;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 1%;
+      gap: 10px;
+
+      &_table {
+        width: 100%;
+        height: 100%;
+        flex: 6;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid $color-primary-200;
+        background-color: #fff;
+        border-radius: 5px;
+        display: flex;
+      }
+
+      &_page {
+        width: 100%;
+        height: 100%;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: row;
+        border-radius: 5px;
+        gap: 10px;
+        padding-left: 10%;
+        padding-right: 10%;
+
+        input {
+          width: 100px;
+          height: 70%;
+          text-align: center;
+          font-size: 1rem;
+        }
+
+        button {
+          background-color: $color-success-500;
+          height: 50px;
+          width: 50px;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+}

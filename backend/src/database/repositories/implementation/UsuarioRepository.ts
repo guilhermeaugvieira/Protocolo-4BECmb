@@ -7,34 +7,22 @@ import {
   IUsuarioFiltroQuantidade,
 } from "../interfaces/IUsuarioRepository";
 
-import mysql2, { ResultSetHeader, RowDataPacket } from "mysql2";
-import { Pool } from "mysql2/promise";
+import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { inject, injectable } from "tsyringe";
+import { IDatabase } from "../../../providers/interfaces/IDatabase";
 
+@injectable()
 export class UsuarioRepository implements IUsuarioRepository {
-  conexaoDB: Pool;
-
-  constructor() {}
-
-  abrirConexao = (): void => {
-    this.conexaoDB = mysql2
-      .createPool({
-        database: process.env.DB_DATABASE,
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        port: parseInt(process.env.DB_PORT),
-      })
-      .promise();
-  };
+  constructor(@inject("Database") private _Database: IDatabase) {}
 
   adicionar = async (
     usuarioRecebido: IUsuarioAdicionarIn
   ): Promise<boolean> => {
-    let usuarioAdicionado: boolean = false;
+    let usuarioAdicionado = false;
 
-    this.abrirConexao();
+    const con = this._Database.abrirConexao();
 
-    await this.conexaoDB
+    await con
       .query(
         "INSERT INTO usuario(UsuarioNome, UsuarioLogin, UsuarioSenha) values (?, ?, ?)",
         [usuarioRecebido.nome, usuarioRecebido.login, usuarioRecebido.senha]
@@ -43,34 +31,34 @@ export class UsuarioRepository implements IUsuarioRepository {
         const { affectedRows } = <ResultSetHeader>resultado[0];
 
         if (affectedRows === 1) usuarioAdicionado = true;
-        else false;
       })
       .catch((erro) => {
-        usuarioAdicionado = false;
         console.log(erro);
       })
       .finally(() => {
-        this.conexaoDB.end();
+        con.end();
       });
 
     return usuarioAdicionado;
   };
 
   remover = async (usuarioId: string): Promise<boolean> => {
-    let usuarioRemovido: boolean = false;
+    let usuarioRemovido = false;
 
-    this.abrirConexao();
+    const con = this._Database.abrirConexao();
 
-    await this.conexaoDB
+    await con
       .query("DELETE FROM usuario WHERE UsuarioID = ?", [usuarioId])
       .then((resultado) => {
         const { affectedRows } = <ResultSetHeader>resultado[0];
 
         if (affectedRows === 1) usuarioRemovido = true;
-        else usuarioRemovido = false;
+      })
+      .catch((erro) => {
+        console.log(erro);
       })
       .finally(() => {
-        this.conexaoDB.end();
+        con.end();
       });
 
     return usuarioRemovido;
@@ -80,8 +68,6 @@ export class UsuarioRepository implements IUsuarioRepository {
     let dadosQuery: IUsuarioOut;
     let contagemFiltros = 0;
     let usuariosRegistrados: IUsuarioOut[] = [];
-
-    this.abrirConexao();
 
     //Montagem da query
     let sqlQuery = "SELECT * FROM usuario"; //Abertura da query
@@ -123,7 +109,9 @@ export class UsuarioRepository implements IUsuarioRepository {
 
     if (filtro.OffSet !== undefined) sqlQuery += ` OFFSET ${filtro.OffSet}`;
 
-    await this.conexaoDB
+    const con = this._Database.abrirConexao();
+
+    await con
       .query(sqlQuery)
       .then((resultado) => {
         const registrosQuery = <RowDataPacket>resultado[0];
@@ -141,19 +129,19 @@ export class UsuarioRepository implements IUsuarioRepository {
           }
         }
       })
+      .catch((erro) => {
+        console.log(erro);
+      })
       .finally(() => {
-        this.conexaoDB.end();
+        con.end();
       });
 
     return usuariosRegistrados;
   };
 
   lerQuantidade = async (filtro: IUsuarioFiltroQuantidade): Promise<number> => {
-    let dadosQuery: IUsuarioOut;
     let contagemFiltros = 0;
-    let usuariosRegistrados: number;
-
-    this.abrirConexao();
+    let usuariosRegistrados = 0;
 
     //Montagem da query
     let sqlQuery = "SELECT COUNT(*) as quantUsuarios FROM usuario"; //Abertura da query
@@ -191,15 +179,20 @@ export class UsuarioRepository implements IUsuarioRepository {
       contagemFiltros += 1;
     }
 
-    await this.conexaoDB
+    const con = this._Database.abrirConexao();
+
+    await con
       .query(sqlQuery)
       .then((resultado) => {
         const dados = <RowDataPacket>resultado[0];
 
         usuariosRegistrados = dados[0].quantUsuarios;
       })
+      .catch((erro) => {
+        console.log(erro);
+      })
       .finally(() => {
-        this.conexaoDB.end();
+        con.end();
       });
 
     return usuariosRegistrados;
@@ -210,9 +203,9 @@ export class UsuarioRepository implements IUsuarioRepository {
   ): Promise<boolean> => {
     let usuarioAtualizado = false;
 
-    this.abrirConexao();
+    const con = this._Database.abrirConexao();
 
-    await this.conexaoDB
+    await con
       .query(
         "UPDATE usuario SET UsuarioNome = ?, UsuarioSenha = ? where UsuarioID = ?",
         [usuarioRecebido.nome, usuarioRecebido.senha, usuarioRecebido.id]
@@ -221,10 +214,12 @@ export class UsuarioRepository implements IUsuarioRepository {
         const { affectedRows } = <ResultSetHeader>resultado[0];
 
         if (affectedRows === 1) usuarioAtualizado = true;
-        else usuarioAtualizado = false;
+      })
+      .catch((erro) => {
+        console.log(erro);
       })
       .finally(() => {
-        this.conexaoDB.end();
+        con.end();
       });
 
     return usuarioAtualizado;
