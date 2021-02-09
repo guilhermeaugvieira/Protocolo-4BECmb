@@ -35,7 +35,7 @@
 
           &:disabled {
             background-color: $color-success-200;
-            cursor: progress;
+            cursor: not-allowed;
             color: #000;
           }
         }

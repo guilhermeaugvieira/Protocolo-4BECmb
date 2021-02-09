@@ -16,7 +16,10 @@
     </div>
     <div class="externoContainer_header_paginacao">
       <span class="indicadorPagina">Itens por página</span>
-      <select [formControl]="$any(formGrp.controls.paginacao)">
+      <select
+        [formControl]="$any(formGrp.controls.paginacao)"
+        (change)="changePagination(formGrp.controls.paginacao.value)"
+      >
         <option
           *ngFor="let paginacao of opcoesPaginacao"
           value="{{ paginacao }}"
@@ -27,16 +30,82 @@
     </div>
   </header>
   <main class="externoContainer_content">
-    <div class="externoContainer_content_table">B</div>
+    <div class="externoContainer_content_data">
+      <table>
+        <thead>
+          <tr>
+            <th>Nr Protocolo</th>
+            <th>Assunto</th>
+            <th>Especificação</th>
+            <th>Data <br />Documento<br />Recebimento</th>
+            <th>Procedência</th>
+            <th>Destino</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let registro of registros">
+            <td>{{ registro.nrProtocolo }}</td>
+            <td>{{ registro.assunto }}</td>
+            <td>{{ registro.especificacao }}</td>
+            <td>
+              {{ registro.dataDocumento }}<br />{{ registro.dataRecebimento }}
+            </td>
+            <td>{{ registro.procedencia }}</td>
+            <td>
+              Destino1:{{ registro.destino1 }}<br />Destino2:
+              {{ registro.destino2 }}<br />Destino3: {{ registro.destino3 }}
+            </td>
+            <td>
+              <a href="#" class="editLink"><mat-icon>mode_edit</mat-icon></a>
+              <a href="#" class="deleteLink"
+                ><mat-icon>delete_forever</mat-icon></a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <div class="externoContainer_content_page">
-      <button class="btnInput"><mat-icon>fast_rewind</mat-icon></button>
+      <button
+        class="btnInput"
+        [disabled]="formGrp.controls.numeroPagina.value === 1"
+        (click)="goToPage('first')"
+      >
+        <mat-icon>fast_rewind</mat-icon>
+      </button>
+      <button
+        class="btnInput"
+        [disabled]="formGrp.controls.numeroPagina.value === 1"
+        (click)="goToPage('left')"
+      >
+        <mat-icon>skip_previous</mat-icon>
+      </button>
       <input
-        type="number"
+        type="text"
         min="1"
-        min="{{ this.numeroPaginas }}"
+        max="{{ this.numeroPaginas }}"
         [formControl]="$any(formGrp.controls.numeroPagina)"
+        readonly
       />
-      <button class="btnInput"><mat-icon>fast_forward</mat-icon></button>
+      <button
+        class="btnInput"
+        [disabled]="
+          this.formGrp.controls.numeroPagina.value === this.numeroPaginas
+        "
+        (click)="goToPage('right')"
+      >
+        <mat-icon>skip_next</mat-icon>
+      </button>
+      <button
+        class="btnInput"
+        [disabled]="
+          this.formGrp.controls.numeroPagina.value === this.numeroPaginas
+        "
+        (click)="goToPage('last')"
+      >
+        <mat-icon>fast_forward</mat-icon>
+      </button>
     </div>
   </main>
 </div>
