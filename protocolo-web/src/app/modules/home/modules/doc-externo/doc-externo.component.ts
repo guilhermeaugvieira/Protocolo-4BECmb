@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DocExternoService } from 'src/app/services/DocExternoService/doc-externo.service';
 import { IDocExterno } from 'src/app/services/DocExternoService/interfaces/IDocExterno';
 import { ISelectOption } from '../../../shared/interfaces/materialData';
@@ -68,21 +63,36 @@ export class DocExternoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._DocExternoService.obterNumeroRegistros().then((dados) => {
-      this.numeroRegistros = dados;
-      console.log(this.numeroRegistros);
-    });
+    this.formGrp.controls.numeroPagina.setValue(1);
 
-    this._DocExternoService.obterRegistros().then((dados) => {
-      this.registros = dados;
-      console.log(this.registros);
-    });
+    this._DocExternoService
+      .obterNumeroRegistros()
+      .then((quantidadeRegistros) => {
+        this.numeroRegistros = quantidadeRegistros;
+
+        this.numeroPaginas = Math.ceil(
+          this.numeroRegistros / this.formGrp.controls.paginacao.value
+        );
+
+        console.log('Paǵinas', this.numeroPaginas);
+        console.log('Qtd Registros', this.numeroRegistros);
+      });
+
+    this._DocExternoService
+      .obterRegistros(
+        this.formGrp.controls.filtro.value,
+        this.formGrp.controls.resposta.value,
+        this.formGrp.controls.paginacao.value,
+        0
+      )
+      .then((dados) => {
+        this.registros = dados;
+        console.log('Registros', this.registros);
+      });
   }
 
   search() {
-    let offset =
-      this.formGrp.controls.paginacao.value *
-      (this.formGrp.controls.numeroPagina.value - 1);
+    this.formGrp.controls.numeroPagina.setValue(1);
 
     this._DocExternoService
       .obterNumeroRegistros(
@@ -96,8 +106,8 @@ export class DocExternoComponent implements OnInit {
           this.numeroRegistros / this.formGrp.controls.paginacao.value
         );
 
-        console.log(this.numeroRegistros);
-        console.log(this.numeroPaginas);
+        console.log('Qtd Registros', this.numeroRegistros);
+        console.log('Qtd Páginas', this.numeroPaginas);
       });
 
     this._DocExternoService
@@ -105,10 +115,67 @@ export class DocExternoComponent implements OnInit {
         this.formGrp.controls.filtro.value,
         this.formGrp.controls.resposta.value,
         this.formGrp.controls.paginacao.value,
-        offset
+        0
       )
       .then((dados) => {
-        console.log(dados);
+        this.registros = dados;
+        console.log('Registros', this.registros);
+      });
+  }
+
+  goToPage(option: string): void {
+    switch (option) {
+      case 'last':
+        this.formGrp.controls.numeroPagina.setValue(this.numeroPaginas);
+        break;
+      case 'first':
+        this.formGrp.controls.numeroPagina.setValue(1);
+        break;
+      case 'right':
+        this.formGrp.controls.numeroPagina.setValue(
+          this.formGrp.controls.numeroPagina.value + 1
+        );
+        break;
+      case 'left':
+        this.formGrp.controls.numeroPagina.setValue(
+          this.formGrp.controls.numeroPagina.value - 1
+        );
+        break;
+    }
+
+    this._DocExternoService
+      .obterRegistros(
+        this.formGrp.controls.filtro.value,
+        this.formGrp.controls.resposta.value,
+        this.formGrp.controls.paginacao.value,
+        this.formGrp.controls.paginacao.value *
+          (this.formGrp.controls.numeroPagina.value - 1)
+      )
+      .then((dados) => {
+        this.registros = dados;
+        console.log('Registros', this.registros);
+      });
+  }
+
+  changePagination(pagination: number): void {
+    this.formGrp.controls.numeroPagina.setValue(1);
+
+    this.numeroPaginas = Math.ceil(
+      this.numeroRegistros / this.formGrp.controls.paginacao.value
+    );
+
+    console.log('Páginas', this.numeroPaginas);
+
+    this._DocExternoService
+      .obterRegistros(
+        this.formGrp.controls.filtro.value,
+        this.formGrp.controls.resposta.value,
+        this.formGrp.controls.paginacao.value,
+        0
+      )
+      .then((dados) => {
+        this.registros = dados;
+        console.log('Registros', this.registros);
       });
   }
 }

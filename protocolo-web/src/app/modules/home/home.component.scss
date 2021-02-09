@@ -44,7 +44,6 @@
   &_dados {
     width: 100%;
     display: flex;
-    position: relative;
     flex-direction: row;
     gap: 2px;
     margin: 0;
@@ -76,6 +75,7 @@
     &_conteudo {
       height: 100%;
       flex: 17;
+      width: 100%;
     }
   }
 }

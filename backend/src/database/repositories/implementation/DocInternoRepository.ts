@@ -75,6 +75,9 @@ export class DocInternoRepository implements IDocRepository {
 
       sqlQuery += ` Internoespecificacao LIKE '%${filtro.especificacao}%'`;
     }
+
+    sqlQuery += " ORDER BY InternoNrprotocolo DESC";
+
     if (filtro.Limit !== undefined) sqlQuery += ` LIMIT ${filtro.Limit}`;
 
     if (filtro.OffSet !== undefined) sqlQuery += ` OFFSET ${filtro.OffSet}`;
