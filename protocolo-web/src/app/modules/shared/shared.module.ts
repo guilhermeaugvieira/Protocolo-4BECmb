@@ -7,9 +7,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { RegistrarDocumentoComponent } from './components/registrar-documento/registrar-documento.component';
 
 @NgModule({
-  declarations: [InputComponent],
+  declarations: [InputComponent, RegistrarDocumentoComponent],
   imports: [
     CommonModule,
     MatFormFieldModule,
