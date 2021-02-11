@@ -7,7 +7,6 @@ import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [DocExternoComponent],
@@ -18,7 +17,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule,
   ],
 })
 export class DocExternoModule {}

@@ -1,7 +1,6 @@
 @import "../../../shared/paleta.scss";
 
 .formContainer {
-  width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -13,18 +12,11 @@
     border: 5px solid $color-primary-500;
 
     &_conteudo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-
       .formLogin {
         display: flex;
         flex-direction: column;
         gap: 10px;
-        justify-content: center;
         align-items: center;
-        width: 100%;
 
         .btnInput {
           background-color: $color-success-500;
