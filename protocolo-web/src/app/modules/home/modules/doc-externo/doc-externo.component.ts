@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { RegistrarDocumentoComponent } from 'src/app/modules/shared/components/registrar-documento/registrar-documento.component';
 import { DocExternoService } from 'src/app/services/DocExternoService/doc-externo.service';
 import { IDocExterno } from 'src/app/services/DocExternoService/interfaces/IDocExterno';
 import { ISelectOption } from '../../../shared/interfaces/materialData';
@@ -19,7 +21,8 @@ export class DocExternoComponent implements OnInit {
 
   constructor(
     private _DocExternoService: DocExternoService,
-    private _FormBuilder: FormBuilder
+    private _FormBuilder: FormBuilder,
+    private _MatDialog: MatDialog
   ) {
     this.opcoesFiltro = [
       {
@@ -177,5 +180,13 @@ export class DocExternoComponent implements OnInit {
         this.registros = dados;
         console.log('Registros', this.registros);
       });
+  }
+
+  adicionarDocumento(): void {
+    const dialogRef = this._MatDialog.open(RegistrarDocumentoComponent, {
+      role: 'dialog',
+      height: '480px',
+      width: '480px',
+    });
   }
 }

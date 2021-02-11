@@ -33,12 +33,12 @@
           gap: 10px;
 
           select {
-            height: 50%;
+            height: 30px;
             font-size: 1rem;
           }
 
           input {
-            height: 50%;
+            height: 30px;
             font-size: 1rem;
             text-align: center;
           }
@@ -46,7 +46,7 @@
           button {
             background-color: $color-success-500;
             color: #fff;
-            height: 50%;
+            height: 30px;
           }
         }
       }
@@ -72,18 +72,19 @@
       flex: 17;
       display: flex;
       flex-direction: column;
-      gap: 2%;
+      gap: 3%;
 
       &_data {
-        max-height: 400px;
         overflow-y: auto;
 
         table {
+          width: 100%;
           thead {
             th {
               color: #fff;
               padding: 0;
               border-bottom: 1px solid #fff;
+              text-align: left;
             }
           }
           tbody {
@@ -91,7 +92,7 @@
               td {
                 color: #fff;
                 padding: 0;
-                text-align: center;
+                text-align: left;
                 border-bottom: 1px solid #fff;
 
                 .editLink {
@@ -112,35 +113,101 @@
       }
 
       &_page {
-        flex: 1;
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        gap: 10px;
-        padding-left: 10%;
-        padding-right: 10%;
+        flex: 2;
+        flex-direction: column;
+        align-items: flex-end;
 
-        input {
-          width: 100px;
-          height: 50px;
-          text-align: center;
-          font-size: 1rem;
+        &_options {
+          display: flex;
+          flex: 1;
+          margin-bottom: 10px;
+          justify-content: center;
+
+          button {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+            background-color: $color-success-500;
+            color: #000;
+            border-radius: 10%;
+            transition: all 0.5s;
+            cursor: pointer;
+
+            &:hover {
+              color: #fff;
+              transition: all 1s;
+            }
+          }
         }
 
-        button {
-          background-color: $color-success-500;
-          height: 50px;
-          width: 50px;
-          border-radius: 50%;
-          color: #fff;
-          cursor: pointer;
+        &_controls {
+          display: flex;
+          gap: 10px;
+          padding-left: 10%;
+          padding-right: 10%;
+          align-items: center;
+          justify-content: center;
 
-          &:disabled {
-            background-color: $color-warning-500;
-            cursor: not-allowed;
+          input {
+            width: 100px;
+            height: 40px;
+            text-align: center;
+            font-size: 1rem;
+          }
+
+          button {
+            background-color: $color-success-500;
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            text-align: center;
+            transition: all 1s;
+
+            &:disabled {
+              background-color: $color-warning-500;
+              cursor: not-allowed;
+              transition: all 1s;
+            }
           }
         }
       }
+    }
+  }
+
+  @media only screen and (min-height: 600px) and (max-height: 699px) {
+    .externoContainer_content_data {
+      max-height: 250px;
+      min-height: 250px;
+    }
+  }
+
+  @media only screen and (min-height: 700px) and (max-height: 799px) {
+    .externoContainer_content_data {
+      max-height: 350px;
+      min-height: 350px;
+    }
+  }
+
+  @media only screen and (min-height: 800px) and (max-height: 899px) {
+    .externoContainer_content_data {
+      max-height: 450px;
+      min-height: 450px;
+    }
+  }
+
+  @media only screen and (min-height: 900px) and (max-height: 999px) {
+    .externoContainer_content_data {
+      max-height: 530px;
+      min-height: 530px;
+    }
+  }
+
+  @media only screen and (min-height: 1000px) and (max-height: 1099px) {
+    .externoContainer_content_data {
+      max-height: 620px;
+      min-height: 620px;
     }
   }
 }
