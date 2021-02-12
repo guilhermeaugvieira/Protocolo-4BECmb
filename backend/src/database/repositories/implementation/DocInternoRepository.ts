@@ -92,16 +92,16 @@ export class DocInternoRepository implements IDocRepository {
         if (respostaQuery.length >= 1) {
           for (let i = 0; i < respostaQuery.length; i++) {
             dadosQuery = {
-              id: respostaQuery[i].ExternoID,
-              assunto: respostaQuery[i].ExternoAssunto,
-              dataDocumento: respostaQuery[i].ExternoDatadocumento,
-              dataRecebimento: respostaQuery[i].ExternoDatarecebimento,
-              especificacao: respostaQuery[i].Externoespecificacao,
-              nrProtocolo: respostaQuery[i].ExternoNrprotocolo,
-              procedencia: respostaQuery[i].ExternoProcedencia,
-              destino1: respostaQuery[i].ExternoDestino1,
-              destino2: respostaQuery[i].ExternoDestino2,
-              destino3: respostaQuery[i].ExternoDestino3,
+              id: respostaQuery[i].InternoID,
+              assunto: respostaQuery[i].InternoAssunto,
+              dataDocumento: respostaQuery[i].InternoDatadocumento,
+              dataRecebimento: respostaQuery[i].InternoDatarecebimento,
+              especificacao: respostaQuery[i].Internoespecificacao,
+              nrProtocolo: respostaQuery[i].InternoNrprotocolo,
+              procedencia: respostaQuery[i].InternoProcedencia,
+              destino1: respostaQuery[i].InternoDestino1,
+              destino2: respostaQuery[i].InternoDestino2,
+              destino3: respostaQuery[i].InternoDestino3,
             };
 
             documentosRegistrados.push(dadosQuery);
