@@ -194,9 +194,9 @@ export class DocExternoComponent implements OnInit {
               this.openSnackBar('Não foi possivel registrar o novo documento');
             }
           });
+      } else {
+        this.openSnackBar('Registro cancelado pelo usuário');
       }
-
-      this.openSnackBar('Registro cancelado pelo usuário');
     });
   }
 
@@ -222,9 +222,9 @@ export class DocExternoComponent implements OnInit {
               }
             });
         }
+      } else {
+        this.openSnackBar('Operação cancelada pelo usuário');
       }
-
-      this.openSnackBar('Operação cancelada pelo usuário');
     });
   }
 
@@ -252,9 +252,9 @@ export class DocExternoComponent implements OnInit {
               this.openSnackBar('Não foi possivel atualizar o documento');
             }
           });
+      } else {
+        this.openSnackBar('Operação cancelada pelo usuário');
       }
-
-      this.openSnackBar('Operação cancelada pelo usuário');
     });
   }
 

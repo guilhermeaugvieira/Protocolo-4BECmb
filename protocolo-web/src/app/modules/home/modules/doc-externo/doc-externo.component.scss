@@ -20,7 +20,7 @@
 
       .indicadorFiltros {
         color: #fff;
-        font-size: 1rem;
+        font-size: 1.3rem;
       }
 
       &_filtros {
@@ -61,9 +61,12 @@
         flex-direction: row;
         gap: 10px;
 
-        .indicadorPagina {
-          font-size: 1rem;
+        span {
           color: #fff;
+          font-size: 1.3rem;
+        }
+
+        .indicadorPagina {
           height: 30px;
         }
       }
@@ -80,6 +83,7 @@
 
         table {
           width: 100%;
+          border-collapse: collapse;
 
           thead {
             th {

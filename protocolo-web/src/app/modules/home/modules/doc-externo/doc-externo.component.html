@@ -1,6 +1,6 @@
 <div class="externoContainer">
   <header class="externoContainer_header">
-    <span class="indicadorFiltros">Filtrar por </span>
+    <span class="indicadorFiltros">Filtrar documentos externos por </span>
     <div class="externoContainer_header_filtros">
       <form [formGroup]="formGrp" (ngSubmit)="search()">
         <select [formControl]="$any(formGrp.controls.filtro)">
@@ -15,8 +15,9 @@
       </form>
     </div>
     <div class="externoContainer_header_paginacao">
-      <span class="indicadorPagina">Itens por página</span>
+      <span>Itens por página</span>
       <select
+        class="indicadorPagina"
         [formControl]="$any(formGrp.controls.paginacao)"
         (change)="changePagination(formGrp.controls.paginacao.value)"
       >

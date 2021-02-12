@@ -172,11 +172,11 @@ export class DocInternoController {
       if (destino1.length < 1 || destino1.length > 100)
         return resposta.json("1° Destino preenchido incorretamente");
 
-    if (destino2 !== undefined)
+    if (destino2 !== undefined && destino2 !== null)
       if (destino2.length < 1 || destino2.length > 100)
         return resposta.json("2° Destino preenchido incorretamente");
 
-    if (destino3 !== undefined)
+    if (destino3 !== undefined && destino3 !== null)
       if (destino3.length < 1 || destino3.length > 100)
         return resposta.json("3° Destino preenchido incorretamente");
 
@@ -188,8 +188,8 @@ export class DocInternoController {
       nrProtocolo: nrProtocolo,
       procedencia: procedencia,
       destino1: destino1 === undefined ? null : destino1,
-      destino2: destino2 === undefined ? null : destino2,
-      destino3: destino3 === undefined ? null : destino3,
+      destino2: destino2 === undefined && destino2 === null ? null : destino2,
+      destino3: destino3 === undefined && destino3 === null ? null : destino3,
     };
 
     const _DocInternoAdicionar = container.resolve(DocInternoAdicionarUseCase);
@@ -298,11 +298,11 @@ export class DocInternoController {
       if (destino1.length < 1 || destino1.length > 100)
         return resposta.json("1° Destino preenchido incorretamente");
 
-    if (destino2 !== undefined)
+    if (destino2 !== undefined && destino2 !== null)
       if (destino2.length < 1 || destino2.length > 100)
         return resposta.json("2° Destino preenchido incorretamente");
 
-    if (destino3 !== undefined)
+    if (destino3 !== undefined && destino3 !== null)
       if (destino3.length < 1 || destino3.length > 100)
         return resposta.json("3° Destino preenchido incorretamente");
 
@@ -315,8 +315,8 @@ export class DocInternoController {
       nrProtocolo: nrProtocolo,
       procedencia: procedencia,
       destino1: destino1 === undefined ? null : destino1,
-      destino2: destino2 === undefined ? null : destino2,
-      destino3: destino3 === undefined ? null : destino3,
+      destino2: destino2 === undefined && destino2 !== null ? null : destino2,
+      destino3: destino3 === undefined && destino3 !== null ? null : destino3,
     };
 
     const _DocInternoAtualizar = container.resolve(DocInternoAtualizarUseCase);
