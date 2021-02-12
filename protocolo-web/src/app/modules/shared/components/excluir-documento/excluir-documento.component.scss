@@ -1,0 +1,39 @@
+@import "../../scss/paleta.scss";
+
+* {
+  box-sizing: border-box;
+}
+
+.excluirContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  p {
+    margin: 0;
+  }
+
+  div.dadosDocumento {
+    flex-direction: column;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  div {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+
+    button.confirmButton {
+      background-color: $color-danger-500;
+      color: #fff;
+    }
+
+    button.denyButton {
+      background-color: $color-warning-500;
+      color: #fff;
+    }
+  }
+}

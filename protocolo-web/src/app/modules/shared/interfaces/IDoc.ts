@@ -1,4 +1,4 @@
-export interface IDocExterno {
+export interface IDoc {
   id: number;
   especificacao: string;
   dataDocumento: string;

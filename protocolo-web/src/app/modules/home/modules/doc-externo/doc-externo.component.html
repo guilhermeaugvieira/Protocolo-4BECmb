@@ -57,9 +57,11 @@
               {{ registro.destino2 }}<br />Destino3: {{ registro.destino3 }}
             </td>
             <td>
-              <a href="#" class="editLink"><mat-icon>mode_edit</mat-icon></a>
-              <a href="#" class="deleteLink"
-                ><mat-icon>delete_forever</mat-icon></a
+              <a class="editLink" (click)="editarDocumento(registro)"
+                ><span class="material-icons">mode_edit</span></a
+              >
+              <a (click)="excluirDocumento(registro)" class="deleteLink"
+                ><span class="material-icons">delete_forever</span></a
               >
             </td>
           </tr>
@@ -67,10 +69,9 @@
       </table>
     </div>
     <div class="externoContainer_content_page">
-      ,
       <div class="externoContainer_content_page_options">
         <button (click)="adicionarDocumento()">
-          <mat-icon>exposure_plus_1</mat-icon>
+          <span class="material-icons">note_add</span>
         </button>
       </div>
       <div class="externoContainer_content_page_controls">
@@ -81,7 +82,7 @@
           "
           (click)="goToPage('first')"
         >
-          <mat-icon>fast_rewind</mat-icon>
+          <span class="material-icons">fast_rewind</span>
         </button>
         <button
           [disabled]="
@@ -90,7 +91,7 @@
           "
           (click)="goToPage('left')"
         >
-          <mat-icon>skip_previous</mat-icon>
+          <span class="material-icons">skip_previous</span>
         </button>
         <input
           type="text"
@@ -106,7 +107,7 @@
           "
           (click)="goToPage('right')"
         >
-          <mat-icon>skip_next</mat-icon>
+          <span class="material-icons">skip_next</span>
         </button>
         <button
           [disabled]="
@@ -115,7 +116,7 @@
           "
           (click)="goToPage('last')"
         >
-          <mat-icon>fast_forward</mat-icon>
+          <span class="material-icons">fast_forward</span>
         </button>
       </div>
     </div>

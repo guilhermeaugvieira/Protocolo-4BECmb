@@ -1,0 +1,26 @@
+<div class="excluirContainer">
+  <p>
+    Tem certeza que deseja <strong>excluir</strong> este item
+    <strong>permanentemente</strong>?
+  </p>
+  <div class="dadosDocumento">
+    <p>Informações do Documento:</p>
+    <p>Nr Protocolo: {{ this._data.documento.nrProtocolo }}</p>
+    <p>Assunto: {{ this._data.documento.assunto }}</p>
+    <p>Especificação: {{ this._data.documento.especificacao }}</p>
+    <p>Data do documento: {{ this._data.documento.dataDocumento }}</p>
+    <p>Data de recebimento: {{ this._data.documento.dataRecebimento }}</p>
+    <p>Procedencia: {{ this._data.documento.procedencia }}</p>
+    <p>Destino1: {{ this._data.documento.destino1 }}</p>
+    <p>Destino2: {{ this._data.documento.destino2 }}</p>
+    <p>Destino3: {{ this._data.documento.destino3 }}</p>
+  </div>
+  <div>
+    <button mat-raised-button class="confirmButton" [mat-dialog-close]="true">
+      Sim
+    </button>
+    <button mat-raised-button class="denyButton" [mat-dialog-close]="false">
+      Não
+    </button>
+  </div>
+</div>

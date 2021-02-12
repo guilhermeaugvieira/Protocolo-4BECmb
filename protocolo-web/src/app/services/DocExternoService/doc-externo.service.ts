@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { urlApi } from '../../../environments/environment';
-import { IDocExterno } from './interfaces/IDocExterno';
+import { IDoc, IDocAdd } from '../../modules/shared/interfaces/IDoc';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +30,7 @@ export class DocExternoService {
     valor?: string,
     limit?: number,
     offset?: number
-  ): Promise<IDocExterno[]> {
+  ): Promise<IDoc[]> {
     if (valor !== undefined) {
       const parametros = new HttpParams()
         .set(filtro, valor)
@@ -38,14 +38,30 @@ export class DocExternoService {
         .set('OffSet', offset.toString());
 
       return this._http
-        .get<IDocExterno[]>(`${urlApi}doc_externo/ler`, {
+        .get<IDoc[]>(`${urlApi}doc_externo/ler`, {
           params: parametros,
         })
         .toPromise();
     } else {
-      return this._http
-        .get<IDocExterno[]>(`${urlApi}doc_externo/ler`)
-        .toPromise();
+      return this._http.get<IDoc[]>(`${urlApi}doc_externo/ler`).toPromise();
     }
+  }
+
+  adicionarRegistro(documento: IDocAdd) {
+    return this._http
+      .post<boolean>(`${urlApi}doc_externo/adicionar`, documento)
+      .toPromise();
+  }
+
+  removerRegistro(idDocumento: string) {
+    return this._http
+      .delete<boolean>(`${urlApi}doc_externo/remover/${idDocumento}`)
+      .toPromise();
+  }
+
+  atualizarRegistro(documentoId: number, dadosDocumento: IDocAdd) {
+    return this._http
+      .put(`${urlApi}doc_externo/atualizar/${documentoId}`, dadosDocumento)
+      .toPromise();
   }
 }

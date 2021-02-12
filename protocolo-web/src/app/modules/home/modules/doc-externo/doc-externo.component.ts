@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { RegistrarDocumentoComponent } from 'src/app/modules/shared/components/registrar-documento/registrar-documento.component';
-import { DocExternoService } from 'src/app/services/DocExternoService/doc-externo.service';
-import { IDocExterno } from 'src/app/services/DocExternoService/interfaces/IDocExterno';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ExcluirDocumentoComponent } from '../../../shared/components/excluir-documento/excluir-documento.component';
+import { RegistrarDocumentoComponent } from '../../../shared/components/registrar-documento/registrar-documento.component';
+import { EditarDocumentoComponent } from '../../../shared/components/editar-documento/editar-documento.component';
+import { DocExternoService } from '../../../../services/DocExternoService/doc-externo.service';
+import { IDoc } from '../../../shared/interfaces/IDoc';
 import { ISelectOption } from '../../../shared/interfaces/materialData';
 
 @Component({
@@ -16,13 +19,14 @@ export class DocExternoComponent implements OnInit {
   numeroPaginas: number;
   opcoesFiltro: ISelectOption[];
   formGrp: FormGroup;
-  registros: IDocExterno[];
+  registros: IDoc[];
   opcoesPaginacao: number[];
 
   constructor(
     private _DocExternoService: DocExternoService,
     private _FormBuilder: FormBuilder,
-    private _MatDialog: MatDialog
+    private _MatDialog: MatDialog,
+    private _snackBar: MatSnackBar
   ) {
     this.opcoesFiltro = [
       {
@@ -76,9 +80,6 @@ export class DocExternoComponent implements OnInit {
         this.numeroPaginas = Math.ceil(
           this.numeroRegistros / this.formGrp.controls.paginacao.value
         );
-
-        console.log('Paǵinas', this.numeroPaginas);
-        console.log('Qtd Registros', this.numeroRegistros);
       });
 
     this._DocExternoService
@@ -90,7 +91,6 @@ export class DocExternoComponent implements OnInit {
       )
       .then((dados) => {
         this.registros = dados;
-        console.log('Registros', this.registros);
       });
   }
 
@@ -108,9 +108,6 @@ export class DocExternoComponent implements OnInit {
         this.numeroPaginas = Math.ceil(
           this.numeroRegistros / this.formGrp.controls.paginacao.value
         );
-
-        console.log('Qtd Registros', this.numeroRegistros);
-        console.log('Qtd Páginas', this.numeroPaginas);
       });
 
     this._DocExternoService
@@ -122,7 +119,6 @@ export class DocExternoComponent implements OnInit {
       )
       .then((dados) => {
         this.registros = dados;
-        console.log('Registros', this.registros);
       });
   }
 
@@ -156,7 +152,6 @@ export class DocExternoComponent implements OnInit {
       )
       .then((dados) => {
         this.registros = dados;
-        console.log('Registros', this.registros);
       });
   }
 
@@ -167,8 +162,6 @@ export class DocExternoComponent implements OnInit {
       this.numeroRegistros / this.formGrp.controls.paginacao.value
     );
 
-    console.log('Páginas', this.numeroPaginas);
-
     this._DocExternoService
       .obterRegistros(
         this.formGrp.controls.filtro.value,
@@ -178,15 +171,96 @@ export class DocExternoComponent implements OnInit {
       )
       .then((dados) => {
         this.registros = dados;
-        console.log('Registros', this.registros);
       });
   }
 
   adicionarDocumento(): void {
     const dialogRef = this._MatDialog.open(RegistrarDocumentoComponent, {
       role: 'dialog',
-      height: '480px',
+      height: '580px',
       width: '480px',
     });
+
+    dialogRef.afterClosed().subscribe((documento) => {
+      if (documento !== undefined) {
+        this._DocExternoService
+          .adicionarRegistro(documento)
+          .then((resposta) => {
+            if (resposta === true) {
+              this.search();
+
+              this.openSnackBar('Documento adicionado com sucesso');
+            } else {
+              this.openSnackBar('Não foi possivel registrar o novo documento');
+            }
+          });
+      }
+
+      this.openSnackBar('Registro cancelado pelo usuário');
+    });
   }
+
+  excluirDocumento(documento: IDoc): void {
+    const dialogRef = this._MatDialog.open(ExcluirDocumentoComponent, {
+      role: 'dialog',
+      data: {
+        documento: documento,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((resposta) => {
+      if (resposta !== undefined) {
+        if (resposta === true) {
+          this._DocExternoService
+            .removerRegistro(documento.id.toString())
+            .then((resposta) => {
+              if (resposta === true) {
+                this.search();
+                this.openSnackBar('Documento removido com sucesso');
+              } else {
+                this.openSnackBar('Não foi possivel remover o documento');
+              }
+            });
+        }
+      }
+
+      this.openSnackBar('Operação cancelada pelo usuário');
+    });
+  }
+
+  editarDocumento(documento: IDoc): void {
+    const { id, ...dadosDocumento } = documento;
+
+    const dialogRef = this._MatDialog.open(EditarDocumentoComponent, {
+      role: 'dialog',
+      height: '580px',
+      width: '480px',
+      data: {
+        documento: dadosDocumento,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((documento) => {
+      if (documento !== undefined) {
+        this._DocExternoService
+          .atualizarRegistro(id, documento)
+          .then((resposta) => {
+            if (resposta === true) {
+              this.search();
+              this.openSnackBar('Documento atualizado com sucesso');
+            } else {
+              this.openSnackBar('Não foi possivel atualizar o documento');
+            }
+          });
+      }
+
+      this.openSnackBar('Operação cancelada pelo usuário');
+    });
+  }
+
+  openSnackBar = (mensagem: string) => {
+    this._snackBar.open(mensagem, 'X', {
+      duration: 3000,
+    });
+  };
 }
