@@ -1,58 +1,63 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IDocAdd } from '../../interfaces/IDoc';
 
 @Component({
-  selector: 'app-registrar-documento',
-  templateUrl: './registrar-documento.component.html',
-  styleUrls: ['./registrar-documento.component.scss'],
+  selector: 'app-editar-documento',
+  templateUrl: './editar-documento.component.html',
+  styleUrls: ['./editar-documento.component.scss'],
 })
-export class RegistrarDocumentoComponent implements OnInit {
+export class EditarDocumentoComponent implements OnInit {
   formGrp: FormGroup;
 
   constructor(
-    public _Dialog: MatDialogRef<RegistrarDocumentoComponent>,
-    private _formBuiler: FormBuilder
+    public _Dialog: MatDialogRef<EditarDocumentoComponent>,
+    private _formBuiler: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public _data: any
   ) {}
 
   ngOnInit(): void {
     this.formGrp = this._formBuiler.group({
-      NrProtocolo: new FormControl('', [
+      NrProtocolo: new FormControl(this._data.documento.nrProtocolo, [
         Validators.required,
         Validators.maxLength(20),
       ]),
-      Assunto: new FormControl('', [
+      Assunto: new FormControl(this._data.documento.assunto, [
         Validators.required,
         Validators.maxLength(100),
       ]),
-      Especificacao: new FormControl('', [
+      Especificacao: new FormControl(this._data.documento.especificacao, [
         Validators.required,
         Validators.maxLength(200),
       ]),
-      DataDocumento: new FormControl('', [
+      DataDocumento: new FormControl(this._data.documento.dataDocumento, [
         Validators.required,
         Validators.maxLength(20),
       ]),
-      DataRecebimento: new FormControl('', [
+      DataRecebimento: new FormControl(this._data.documento.dataRecebimento, [
         Validators.required,
         Validators.maxLength(20),
       ]),
-      Procedencia: new FormControl('', [
+      Procedencia: new FormControl(this._data.documento.procedencia, [
         Validators.required,
         Validators.maxLength(100),
       ]),
-      Destino1: new FormControl('', [
+      Destino1: new FormControl(this._data.documento.destino1, [
         Validators.required,
         Validators.maxLength(100),
       ]),
-      Destino2: new FormControl('', [Validators.maxLength(100)]),
-      Destino3: new FormControl('', [Validators.maxLength(100)]),
+      Destino2: new FormControl(this._data.documento.destino2, [
+        Validators.maxLength(100),
+      ]),
+      Destino3: new FormControl(this._data.documento.destino3, [
+        Validators.maxLength(100),
+      ]),
     });
   }
 

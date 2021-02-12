@@ -1,4 +1,4 @@
-@import "../../../shared/paleta.scss";
+@import "../../../shared/scss/paleta.scss";
 
 * {
   box-sizing: border-box;
@@ -33,12 +33,12 @@
           gap: 10px;
 
           select {
-            height: 50%;
+            height: 30px;
             font-size: 1rem;
           }
 
           input {
-            height: 50%;
+            height: 30px;
             font-size: 1rem;
             text-align: center;
           }
@@ -46,7 +46,7 @@
           button {
             background-color: $color-success-500;
             color: #fff;
-            height: 50%;
+            height: 30px;
           }
         }
       }
@@ -64,6 +64,7 @@
         .indicadorPagina {
           font-size: 1rem;
           color: #fff;
+          height: 30px;
         }
       }
     }
@@ -72,18 +73,20 @@
       flex: 17;
       display: flex;
       flex-direction: column;
-      gap: 2%;
+      gap: 3%;
 
       &_data {
-        max-height: 400px;
         overflow-y: auto;
 
         table {
+          width: 100%;
+
           thead {
             th {
               color: #fff;
               padding: 0;
               border-bottom: 1px solid #fff;
+              text-align: left;
             }
           }
           tbody {
@@ -91,7 +94,7 @@
               td {
                 color: #fff;
                 padding: 0;
-                text-align: center;
+                text-align: left;
                 border-bottom: 1px solid #fff;
 
                 .editLink {
@@ -100,6 +103,10 @@
 
                 .deleteLink {
                   color: $color-danger-500;
+                }
+
+                a:hover {
+                  cursor: pointer;
                 }
               }
 
@@ -112,35 +119,84 @@
       }
 
       &_page {
-        flex: 1;
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        gap: 10px;
-        padding-left: 10%;
-        padding-right: 10%;
+        &_options {
+          display: flex;
+          margin-bottom: 10px;
+          justify-content: center;
 
-        input {
-          width: 100px;
-          height: 50px;
-          text-align: center;
-          font-size: 1rem;
+          button {
+            height: 40px;
+            background-color: $color-success-500;
+            color: #000;
+            transition: all 0.5s;
+            cursor: pointer;
+
+            &:hover {
+              color: #fff;
+              transition: all 1s;
+            }
+          }
         }
 
-        button {
-          background-color: $color-success-500;
-          height: 50px;
-          width: 50px;
-          border-radius: 50%;
-          color: #fff;
-          cursor: pointer;
+        &_controls {
+          display: flex;
+          gap: 10px;
+          padding-left: 10%;
+          padding-right: 10%;
+          justify-content: center;
 
-          &:disabled {
-            background-color: $color-warning-500;
-            cursor: not-allowed;
+          input {
+            width: 100px;
+            height: 40px;
+            text-align: center;
+            font-size: 1rem;
+          }
+
+          button {
+            background-color: $color-success-500;
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            transition: all 1s;
+
+            &:disabled {
+              background-color: $color-warning-500;
+              cursor: not-allowed;
+              transition: all 1s;
+            }
           }
         }
       }
+    }
+  }
+
+  @media only screen and (min-height: 600px) and (max-height: 699px) {
+    .externoContainer_content_data {
+      height: 250px;
+    }
+  }
+
+  @media only screen and (min-height: 700px) and (max-height: 799px) {
+    .externoContainer_content_data {
+      height: 340px;
+    }
+  }
+
+  @media only screen and (min-height: 800px) and (max-height: 899px) {
+    .externoContainer_content_data {
+      height: 400px;
+    }
+  }
+
+  @media only screen and (min-height: 900px) and (max-height: 999px) {
+    .externoContainer_content_data {
+      height: 460px;
+    }
+  }
+
+  @media only screen and (min-height: 1000px) and (max-height: 1099px) {
+    .externoContainer_content_data {
+      height: 530px;
     }
   }
 }

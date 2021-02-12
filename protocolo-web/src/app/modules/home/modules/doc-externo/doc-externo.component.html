@@ -37,7 +37,7 @@
             <th>Nr Protocolo</th>
             <th>Assunto</th>
             <th>Especificação</th>
-            <th>Data <br />Documento<br />Recebimento</th>
+            <th>Data: <br />Documento<br />Recebimento</th>
             <th>Procedência</th>
             <th>Destino</th>
             <th>Ações</th>
@@ -57,9 +57,11 @@
               {{ registro.destino2 }}<br />Destino3: {{ registro.destino3 }}
             </td>
             <td>
-              <a href="#" class="editLink"><mat-icon>mode_edit</mat-icon></a>
-              <a href="#" class="deleteLink"
-                ><mat-icon>delete_forever</mat-icon></a
+              <a class="editLink" (click)="editarDocumento(registro)"
+                ><span class="material-icons">mode_edit</span></a
+              >
+              <a (click)="excluirDocumento(registro)" class="deleteLink"
+                ><span class="material-icons">delete_forever</span></a
               >
             </td>
           </tr>
@@ -67,45 +69,56 @@
       </table>
     </div>
     <div class="externoContainer_content_page">
-      <button
-        class="btnInput"
-        [disabled]="formGrp.controls.numeroPagina.value === 1"
-        (click)="goToPage('first')"
-      >
-        <mat-icon>fast_rewind</mat-icon>
-      </button>
-      <button
-        class="btnInput"
-        [disabled]="formGrp.controls.numeroPagina.value === 1"
-        (click)="goToPage('left')"
-      >
-        <mat-icon>skip_previous</mat-icon>
-      </button>
-      <input
-        type="text"
-        min="1"
-        max="{{ this.numeroPaginas }}"
-        [formControl]="$any(formGrp.controls.numeroPagina)"
-        readonly
-      />
-      <button
-        class="btnInput"
-        [disabled]="
-          this.formGrp.controls.numeroPagina.value === this.numeroPaginas
-        "
-        (click)="goToPage('right')"
-      >
-        <mat-icon>skip_next</mat-icon>
-      </button>
-      <button
-        class="btnInput"
-        [disabled]="
-          this.formGrp.controls.numeroPagina.value === this.numeroPaginas
-        "
-        (click)="goToPage('last')"
-      >
-        <mat-icon>fast_forward</mat-icon>
-      </button>
+      <div class="externoContainer_content_page_options">
+        <button (click)="adicionarDocumento()">
+          <span class="material-icons">note_add</span>
+        </button>
+      </div>
+      <div class="externoContainer_content_page_controls">
+        <button
+          [disabled]="
+            formGrp.controls.numeroPagina.value === 1 ||
+            this.numeroRegistros === 0
+          "
+          (click)="goToPage('first')"
+        >
+          <span class="material-icons">fast_rewind</span>
+        </button>
+        <button
+          [disabled]="
+            formGrp.controls.numeroPagina.value === 1 ||
+            this.numeroRegistros === 0
+          "
+          (click)="goToPage('left')"
+        >
+          <span class="material-icons">skip_previous</span>
+        </button>
+        <input
+          type="text"
+          min="1"
+          max="{{ this.numeroPaginas }}"
+          [formControl]="$any(formGrp.controls.numeroPagina)"
+          readonly
+        />
+        <button
+          [disabled]="
+            this.formGrp.controls.numeroPagina.value === this.numeroPaginas ||
+            this.numeroRegistros === 0
+          "
+          (click)="goToPage('right')"
+        >
+          <span class="material-icons">skip_next</span>
+        </button>
+        <button
+          [disabled]="
+            this.formGrp.controls.numeroPagina.value === this.numeroPaginas ||
+            this.numeroRegistros === 0
+          "
+          (click)="goToPage('last')"
+        >
+          <span class="material-icons">fast_forward</span>
+        </button>
+      </div>
     </div>
   </main>
 </div>

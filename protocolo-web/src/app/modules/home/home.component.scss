@@ -1,4 +1,4 @@
-@import "../../modules/shared/paleta.scss";
+@import "../../modules/shared/scss/paleta.scss";
 
 * {
   box-sizing: border-box;
@@ -56,6 +56,10 @@
           transition: all 0.2s;
         }
       }
+    }
+
+    &_conteudo {
+      flex: 1;
     }
   }
 }
