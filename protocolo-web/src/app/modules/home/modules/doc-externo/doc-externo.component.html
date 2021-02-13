@@ -81,7 +81,7 @@
             formGrp.controls.numeroPagina.value === 1 ||
             this.numeroRegistros === 0
           "
-          (click)="goToPage('first')"
+          (click)="goToPage('primeira')"
         >
           <span class="material-icons">fast_rewind</span>
         </button>
@@ -90,7 +90,7 @@
             formGrp.controls.numeroPagina.value === 1 ||
             this.numeroRegistros === 0
           "
-          (click)="goToPage('left')"
+          (click)="goToPage('anterior')"
         >
           <span class="material-icons">skip_previous</span>
         </button>
@@ -106,7 +106,7 @@
             this.formGrp.controls.numeroPagina.value === this.numeroPaginas ||
             this.numeroRegistros === 0
           "
-          (click)="goToPage('right')"
+          (click)="goToPage('proxima')"
         >
           <span class="material-icons">skip_next</span>
         </button>
@@ -115,7 +115,7 @@
             this.formGrp.controls.numeroPagina.value === this.numeroPaginas ||
             this.numeroRegistros === 0
           "
-          (click)="goToPage('last')"
+          (click)="goToPage('ultima')"
         >
           <span class="material-icons">fast_forward</span>
         </button>

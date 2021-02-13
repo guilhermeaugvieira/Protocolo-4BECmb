@@ -1,0 +1,65 @@
+<div class="editarUsuarioContainer">
+  <p>Atualizar informações do usuário</p>
+  <form [formGroup]="formGrp">
+    <div>
+      <span class="material-icons">password</span>
+      <input
+        type="password"
+        placeholder="Senha Atual"
+        required
+        [formControl]="$any(formGrp.controls.senhaAtual)"
+      />
+    </div>
+    <div>
+      <span class="material-icons">perm_identity</span>
+      <input
+        type="text"
+        placeholder="Nome"
+        [formControl]="$any(formGrp.controls.nome)"
+        required
+      />
+    </div>
+    <div>
+      <span class="material-icons">password</span>
+      <input
+        type="password"
+        placeholder="Senha Nova"
+        [formControl]="$any(formGrp.controls.senhaNova)"
+        required
+      />
+    </div>
+    <div>
+      <span class="material-icons">password</span>
+      <input
+        type="password"
+        placeholder="Confirmação Senha Nova"
+        [formControl]="$any(formGrp.controls.confirmacaoSenha)"
+        required
+      />
+    </div>
+  </form>
+  <div
+    class="aviso"
+    *ngIf="
+      formGrp.controls.senhaNova.value !==
+      formGrp.controls.confirmacaoSenha.value
+    "
+  >
+    <p>Senhas novas não correspondem</p>
+  </div>
+  <div>
+    <button
+      mat-raised-button
+      [disabled]="
+        formGrp.invalid ||
+        formGrp.pending ||
+        formGrp.controls.senhaNova.value !==
+          formGrp.controls.confirmacaoSenha.value
+      "
+      class="btnConfirm"
+      (click)="prepararDados()"
+    >
+      Atualizar
+    </button>
+  </div>
+</div>

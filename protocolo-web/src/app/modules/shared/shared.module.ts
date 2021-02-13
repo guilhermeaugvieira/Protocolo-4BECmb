@@ -11,6 +11,7 @@ import { RegistrarDocumentoComponent } from './components/registrar-documento/re
 import { MatButtonModule } from '@angular/material/button';
 import { ExcluirDocumentoComponent } from './components/excluir-documento/excluir-documento.component';
 import { EditarDocumentoComponent } from './components/editar-documento/editar-documento.component';
+import { EditarUsuarioComponent } from './components/editar-usuario/editar-usuario.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { EditarDocumentoComponent } from './components/editar-documento/editar-d
     RegistrarDocumentoComponent,
     ExcluirDocumentoComponent,
     EditarDocumentoComponent,
+    EditarUsuarioComponent,
   ],
   imports: [
     CommonModule,
@@ -29,6 +31,12 @@ import { EditarDocumentoComponent } from './components/editar-documento/editar-d
     MatDialogModule,
     MatButtonModule,
   ],
-  exports: [InputComponent],
+  exports: [
+    InputComponent,
+    RegistrarDocumentoComponent,
+    ExcluirDocumentoComponent,
+    EditarDocumentoComponent,
+    EditarDocumentoComponent,
+  ],
 })
 export class SharedModule {}
