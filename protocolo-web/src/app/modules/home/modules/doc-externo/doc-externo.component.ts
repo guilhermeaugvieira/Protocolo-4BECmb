@@ -124,18 +124,18 @@ export class DocExternoComponent implements OnInit {
 
   goToPage(option: string): void {
     switch (option) {
-      case 'last':
+      case 'ultima':
         this.formGrp.controls.numeroPagina.setValue(this.numeroPaginas);
         break;
-      case 'first':
+      case 'primeira':
         this.formGrp.controls.numeroPagina.setValue(1);
         break;
-      case 'right':
+      case 'proxima':
         this.formGrp.controls.numeroPagina.setValue(
           this.formGrp.controls.numeroPagina.value + 1
         );
         break;
-      case 'left':
+      case 'anterior':
         this.formGrp.controls.numeroPagina.setValue(
           this.formGrp.controls.numeroPagina.value - 1
         );
@@ -194,8 +194,6 @@ export class DocExternoComponent implements OnInit {
               this.openSnackBar('Não foi possivel registrar o novo documento');
             }
           });
-      } else {
-        this.openSnackBar('Registro cancelado pelo usuário');
       }
     });
   }
@@ -222,8 +220,6 @@ export class DocExternoComponent implements OnInit {
               }
             });
         }
-      } else {
-        this.openSnackBar('Operação cancelada pelo usuário');
       }
     });
   }
@@ -252,8 +248,6 @@ export class DocExternoComponent implements OnInit {
               this.openSnackBar('Não foi possivel atualizar o documento');
             }
           });
-      } else {
-        this.openSnackBar('Operação cancelada pelo usuário');
       }
     });
   }

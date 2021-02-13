@@ -1,0 +1,51 @@
+@import "../../scss/paleta.scss";
+
+.editarUsuarioContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  p {
+    font-size: 1.3rem;
+    margin: 0;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    div {
+      gap: 3px;
+      justify-content: flex-start;
+    }
+  }
+
+  div {
+    display: flex;
+    justify-content: center;
+
+    .btnConfirm {
+      background-color: $color-success-500;
+      color: #fff;
+      width: 90%;
+
+      &:disabled {
+        background-color: $color-success-100;
+        color: #000;
+        cursor: not-allowed;
+      }
+    }
+
+    p {
+      font-size: 1.3rem;
+    }
+  }
+
+  div.aviso {
+    background-color: $color-info-500;
+    color: #fff;
+    min-height: 30px;
+    align-items: center;
+  }
+}

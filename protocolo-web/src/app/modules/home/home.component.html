@@ -16,14 +16,18 @@
         <p>{{ nomeUsuario }}</p>
       </a>
       <mat-menu #menuUsuario="matMenu">
-        <button mat-menu-item (click)="logout()">Logout</button>
-        <button mat-menu-item>Atualizar dados</button>
+        <button mat-menu-item (click)="logout()">
+          <span class="material-icons">logout</span> Logout
+        </button>
+        <button mat-menu-item (click)="atualizarDadosUsuario()">
+          <span class="material-icons">manage_accounts</span> Atualizar dados
+        </button>
       </mat-menu>
     </div>
   </header>
   <div class="homeContainer_dados">
     <div class="homeContainer_dados_menu">
-      <button mat-raised-button [routerLink]="'/home/docExterno'">
+      <button mat-raised-button routerLink="docExterno">
         <mat-icon> logout </mat-icon> Documentos Externos
       </button>
       <button mat-raised-button routerLink="docInterno">

@@ -56,7 +56,7 @@ export class RegistrarDocumentoComponent implements OnInit {
     });
   }
 
-  prepararDados(): IDocAdd {
+  prepararDados(): void {
     const documento: IDocAdd = {
       assunto: this.formGrp.value.Assunto,
       dataDocumento: this.formGrp.value.DataDocumento,
@@ -75,6 +75,6 @@ export class RegistrarDocumentoComponent implements OnInit {
           : undefined,
     };
 
-    return documento;
+    this._Dialog.close(documento);
   }
 }

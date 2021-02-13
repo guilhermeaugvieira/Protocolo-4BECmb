@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SharedModule } from '../shared/shared.module';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [LoginComponent, ApresentacaoComponent, FormComponent],
@@ -26,6 +27,7 @@ import { SharedModule } from '../shared/shared.module';
     MatInputModule,
     MatFormFieldModule,
     MatSnackBarModule,
+    MatIconModule,
     SharedModule,
   ],
 })

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IUsuario } from './interfaces/IUsuario';
+import { IUsuario, IUsuarioAtualizar } from './interfaces/IUsuario';
 import { HttpClient } from '@angular/common/http';
 import { urlApi } from '../../../environments/environment';
 import jwt from 'jwt-decode';
@@ -33,5 +33,11 @@ export class UserService {
 
   getToken(): string {
     return localStorage.getItem('USERTOKEN');
+  }
+
+  atualizar(idUsuario: number, form: IUsuarioAtualizar) {
+    return this.http
+      .put<boolean>(`${urlApi}usuario/atualizar/${idUsuario}`, form)
+      .toPromise();
   }
 }

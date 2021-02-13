@@ -96,7 +96,7 @@
         type="submit"
         mat-raised-button
         [disabled]="formGrp.invalid || formGrp.pending"
-        [mat-dialog-close]="prepararDados()"
+        (click)="prepararDados()"
       >
         Cadastrar
       </button>
