@@ -10,6 +10,7 @@ import {
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { inject, injectable } from "tsyringe";
 import { IDatabase } from "../../../providers/interfaces/IDatabase";
+import { query } from "express";
 
 @injectable()
 export class UsuarioRepository implements IUsuarioRepository {
@@ -22,22 +23,21 @@ export class UsuarioRepository implements IUsuarioRepository {
 
     const con = this._Database.abrirConexao();
 
-    await con
-      .query(
+    try {
+      const query = await con.query(
         "INSERT INTO usuario(UsuarioNome, UsuarioLogin, UsuarioSenha) values (?, ?, ?)",
         [usuarioRecebido.nome, usuarioRecebido.login, usuarioRecebido.senha]
-      )
-      .then((resultado) => {
-        const { affectedRows } = <ResultSetHeader>resultado[0];
+      );
 
-        if (affectedRows === 1) usuarioAdicionado = true;
-      })
-      .catch((erro) => {
-        console.log(erro);
-      })
-      .finally(() => {
-        con.end();
-      });
+      const { affectedRows } = <ResultSetHeader>query[0];
+
+      if (affectedRows === 1) usuarioAdicionado = true;
+
+    } catch (erro) {
+      console.log(erro);
+    } finally {
+      con.end();
+    }
 
     return usuarioAdicionado;
   };
@@ -47,19 +47,18 @@ export class UsuarioRepository implements IUsuarioRepository {
 
     const con = this._Database.abrirConexao();
 
-    await con
-      .query("DELETE FROM usuario WHERE UsuarioID = ?", [usuarioId])
-      .then((resultado) => {
-        const { affectedRows } = <ResultSetHeader>resultado[0];
+    try {
+      const query = await con.query("DELETE FROM usuario WHERE UsuarioID = ?", [usuarioId]);
+      
+      const { affectedRows } = <ResultSetHeader>query[0];
 
-        if (affectedRows === 1) usuarioRemovido = true;
-      })
-      .catch((erro) => {
-        console.log(erro);
-      })
-      .finally(() => {
-        con.end();
-      });
+      if (affectedRows === 1) usuarioRemovido = true;
+
+    } catch (erro) {
+      console.log(erro);
+    } finally {
+      con.end();
+    }
 
     return usuarioRemovido;
   };
@@ -111,30 +110,29 @@ export class UsuarioRepository implements IUsuarioRepository {
 
     const con = this._Database.abrirConexao();
 
-    await con
-      .query(sqlQuery)
-      .then((resultado) => {
-        const registrosQuery = <RowDataPacket>resultado[0];
+    try {
+      const query = await con.query(sqlQuery);
+        
+      const registrosQuery = <RowDataPacket>query[0];
 
-        if (registrosQuery.length >= 1) {
-          for (let i = 0; i < registrosQuery.length; i++) {
-            dadosQuery = {
-              id: registrosQuery[i].UsuarioID,
-              login: registrosQuery[i].UsuarioLogin,
-              nome: registrosQuery[i].UsuarioNome,
-              senha: registrosQuery[i].UsuarioSenha,
-            };
+      if (registrosQuery.length >= 1) {
+        for (let i = 0; i < registrosQuery.length; i++) {
+          dadosQuery = {
+            id: registrosQuery[i].UsuarioID,
+            login: registrosQuery[i].UsuarioLogin,
+            nome: registrosQuery[i].UsuarioNome,
+            senha: registrosQuery[i].UsuarioSenha,
+          };
 
-            usuariosRegistrados.push(dadosQuery);
-          }
+          usuariosRegistrados.push(dadosQuery);
         }
-      })
-      .catch((erro) => {
-        console.log(erro);
-      })
-      .finally(() => {
-        con.end();
-      });
+      }
+
+    } catch (erro) {
+      console.log(erro);
+    } finally {
+      con.end();
+    }
 
     return usuariosRegistrados;
   };
@@ -181,19 +179,18 @@ export class UsuarioRepository implements IUsuarioRepository {
 
     const con = this._Database.abrirConexao();
 
-    await con
-      .query(sqlQuery)
-      .then((resultado) => {
-        const dados = <RowDataPacket>resultado[0];
+    try {
+      const query = await con.query(sqlQuery);
 
-        usuariosRegistrados = dados[0].quantUsuarios;
-      })
-      .catch((erro) => {
-        console.log(erro);
-      })
-      .finally(() => {
-        con.end();
-      });
+      const dados = <RowDataPacket>query[0];
+
+      usuariosRegistrados = dados[0].quantUsuarios;
+
+    } catch (erro) {
+      console.log(erro);
+    } finally {
+      con.end();
+    }
 
     return usuariosRegistrados;
   };
@@ -205,22 +202,21 @@ export class UsuarioRepository implements IUsuarioRepository {
 
     const con = this._Database.abrirConexao();
 
-    await con
-      .query(
+    try {
+      const query = await con.query(
         "UPDATE usuario SET UsuarioNome = ?, UsuarioSenha = ? where UsuarioID = ?",
         [usuarioRecebido.nome, usuarioRecebido.senha, usuarioRecebido.id]
-      )
-      .then((resultado) => {
-        const { affectedRows } = <ResultSetHeader>resultado[0];
+      );
 
-        if (affectedRows === 1) usuarioAtualizado = true;
-      })
-      .catch((erro) => {
-        console.log(erro);
-      })
-      .finally(() => {
-        con.end();
-      });
+      const { affectedRows } = <ResultSetHeader>query[0];
+
+      if (affectedRows === 1) usuarioAtualizado = true;
+
+    } catch (erro) {
+      console.log(erro);
+    } finally {
+      con.end();
+    }
 
     return usuarioAtualizado;
   };

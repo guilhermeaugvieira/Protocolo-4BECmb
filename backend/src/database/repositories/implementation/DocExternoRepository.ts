@@ -84,36 +84,35 @@ export class DocExternoRepository implements IDocRepository {
 
     const con = this._Database.abrirConexao();
 
-    await con
-      .query(sqlQuery)
-      .then((resultado) => {
-        const respostaQuery = <RowDataPacket>resultado[0];
+    try {
+      const query = await con.query(sqlQuery);
 
-        if (respostaQuery.length >= 1) {
-          for (let i = 0; i < respostaQuery.length; i++) {
-            dadosQuery = {
-              id: respostaQuery[i].ExternoID,
-              assunto: respostaQuery[i].ExternoAssunto,
-              dataDocumento: respostaQuery[i].ExternoDatadocumento,
-              dataRecebimento: respostaQuery[i].ExternoDatarecebimento,
-              especificacao: respostaQuery[i].Externoespecificacao,
-              nrProtocolo: respostaQuery[i].ExternoNrprotocolo,
-              procedencia: respostaQuery[i].ExternoProcedencia,
-              destino1: respostaQuery[i].ExternoDestino1,
-              destino2: respostaQuery[i].ExternoDestino2,
-              destino3: respostaQuery[i].ExternoDestino3,
-            };
+      const respostaQuery = <RowDataPacket>query[0];
 
-            documentosRegistrados.push(dadosQuery);
-          }
+      if (respostaQuery.length >= 1) {
+        for (let i = 0; i < respostaQuery.length; i++) {
+          dadosQuery = {
+            id: respostaQuery[i].ExternoID,
+            assunto: respostaQuery[i].ExternoAssunto,
+            dataDocumento: respostaQuery[i].ExternoDatadocumento,
+            dataRecebimento: respostaQuery[i].ExternoDatarecebimento,
+            especificacao: respostaQuery[i].Externoespecificacao,
+            nrProtocolo: respostaQuery[i].ExternoNrprotocolo,
+            procedencia: respostaQuery[i].ExternoProcedencia,
+            destino1: respostaQuery[i].ExternoDestino1,
+            destino2: respostaQuery[i].ExternoDestino2,
+            destino3: respostaQuery[i].ExternoDestino3,
+          };
+
+          documentosRegistrados.push(dadosQuery);
         }
-      })
-      .catch((erro) => {
-        console.log(erro);
-      })
-      .finally(() => {
-        con.end();
-      });
+      }
+
+    } catch (erro) {
+      console.log(erro);
+    } finally {
+      con.end();
+    }
 
     return documentosRegistrados;
   };
@@ -182,19 +181,18 @@ export class DocExternoRepository implements IDocRepository {
 
     const con = this._Database.abrirConexao();
 
-    await con
-      .query(sqlQuery)
-      .then((resultado) => {
-        const dados = <RowDataPacket>resultado[0];
+    try{
+      const query = await con.query(sqlQuery);
 
-        documentosRegistrados = dados[0].quantDocumentos;
-      })
-      .catch((erro) => {
-        console.log(erro);
-      })
-      .finally(() => {
-        con.end();
-      });
+      const dados = <RowDataPacket>query[0];
+
+      documentosRegistrados = dados[0].quantDocumentos;
+
+    }catch(erro){
+      console.log(erro);
+    }finally{
+      con.end();
+    }
 
     return documentosRegistrados;
   };
@@ -204,8 +202,8 @@ export class DocExternoRepository implements IDocRepository {
 
     const con = this._Database.abrirConexao();
 
-    await con
-      .query(
+    try {
+      const query = await con.query(
         "INSERT INTO doc_externo( \
       Externoespecificacao, \
       ExternoDatadocumento, \
@@ -228,18 +226,17 @@ export class DocExternoRepository implements IDocRepository {
           documentoRecebido.destino2,
           documentoRecebido.destino3,
         ]
-      )
-      .then((resultado) => {
-        const { affectedRows } = <ResultSetHeader>resultado[0];
+      );
 
-        if (affectedRows === 1) documentoAdicionado = true;
-      })
-      .catch((erro) => {
-        console.log(erro);
-      })
-      .finally(() => {
-        con.end();
-      });
+      const { affectedRows } = <ResultSetHeader>query[0];
+
+      if (affectedRows === 1) documentoAdicionado = true;
+
+    } catch (erro) {
+      console.log(erro);
+    }finally{
+      con.end();
+    }
 
     return documentoAdicionado;
   };
@@ -249,20 +246,19 @@ export class DocExternoRepository implements IDocRepository {
 
     const con = this._Database.abrirConexao();
 
-    await con
-      .query("DELETE FROM doc_externo WHERE ExternoID = ?", [documentoId])
-      .then((resultado) => {
-        const { affectedRows } = <ResultSetHeader>resultado[0];
+    try {
+      const query = await con.query("DELETE FROM doc_externo WHERE ExternoID = ?", [documentoId]);
 
-        if (affectedRows === 1) documentoRemovido = true;
-        else documentoRemovido = false;
-      })
-      .catch((erro) => {
-        console.log(erro);
-      })
-      .finally(() => {
-        con.end();
-      });
+      const { affectedRows } = <ResultSetHeader>query[0];
+
+      if (affectedRows === 1) documentoRemovido = true;
+      else documentoRemovido = false;
+
+    } catch (erro) {
+      console.log(erro);
+    } finally {
+      con.end();
+    }
 
     return documentoRemovido;
   };
@@ -272,8 +268,8 @@ export class DocExternoRepository implements IDocRepository {
 
     const con = this._Database.abrirConexao();
 
-    await con
-      .query(
+    try {
+      const query = await con.query(
         "UPDATE doc_externo SET \
       Externoespecificacao = ?, \
       ExternoDatadocumento = ?, \
@@ -297,18 +293,17 @@ export class DocExternoRepository implements IDocRepository {
           documentoRecebido.destino3,
           documentoRecebido.id,
         ]
-      )
-      .then((resultado) => {
-        const { affectedRows } = <ResultSetHeader>resultado[0];
+      );
+      
+      const { affectedRows } = <ResultSetHeader>query[0];
 
-        if (affectedRows === 1) documentoAtualizado = true;
-      })
-      .catch((erro) => {
-        console.log(erro);
-      })
-      .finally(() => {
-        con.end();
-      });
+      if (affectedRows === 1) documentoAtualizado = true;
+
+    } catch (erro) {
+      console.log(erro);
+    } finally {
+      con.end();
+    }
 
     return documentoAtualizado;
   };
